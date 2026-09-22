@@ -35,3 +35,8 @@ yarn-debug.log*
 # ts
 *.tsbuildinfo
 next-env.d.ts
+
+# private scheme data (lives in Neon via scripts/seed-schemes.mjs, never in git)
+src/data/
+GOVERNMENT_SCHEMES.md
+*-PRIVATE-*

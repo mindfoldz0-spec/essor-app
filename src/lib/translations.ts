@@ -68,6 +68,12 @@ export interface TranslationStrings {
   orders: { title: string; tag: string; desc: string };
   notFound: { title: string; home: string };
   errorPage: { title: string; retry: string };
+  schemes: {
+    title: string; searchPlaceholder: string; all: string; central: string; state: string;
+    womenOnly: string; benefit: string; eligibility: string; documents: string; steps: string;
+    portal: string; videos: string; empty: string; back: string;
+    goals: { credit: string; skills: string; subsidy: string; insurance: string };
+  };
   voice: { toggleGuide: string; muteGuide: string; unmuteGuide: string; hear: string; speak: string; stop: string; sttFailed: string; micDenied: string };
 }
 
@@ -178,6 +184,14 @@ export const translations: Record<Language, TranslationStrings> = {
     orders: { title: "Orders", tag: "Coming Soon", desc: "Seller orders and buyer cart will live here." },
     notFound: { title: "Not Found", home: "Home" },
     errorPage: { title: "Something went wrong", retry: "Try Again" },
+    schemes: {
+      title: "Government Schemes", searchPlaceholder: "Search schemes…", all: "All",
+      central: "Central", state: "Maharashtra", womenOnly: "Women only",
+      benefit: "Benefit", eligibility: "Who can apply", documents: "Documents",
+      steps: "How to apply", portal: "Official Portal", videos: "Video guides",
+      empty: "No schemes match. Try clearing filters.", back: "All schemes",
+      goals: { credit: "Credit", skills: "Skills", subsidy: "Subsidy", insurance: "Insurance" },
+    },
     voice: { toggleGuide: "Voice guidance", muteGuide: "Mute voice guidance", unmuteGuide: "Unmute voice guidance", hear: "Hear", speak: "Speak", stop: "Stop listening", sttFailed: "Couldn't catch that. Please speak again.", micDenied: "Microphone blocked. Allow mic access to speak." },
   },
   marathi: {
@@ -235,6 +249,14 @@ export const translations: Record<Language, TranslationStrings> = {
     orders: { title: "ऑर्डर", tag: "लवकरच येत आहे", desc: "विक्रेता ऑर्डर आणि खरेदीदार कार्ट येथे असेल." },
     notFound: { title: "सापडले नाही", home: "मुख्य" },
     errorPage: { title: "काहीतरी चुकले", retry: "पुन्हा प्रयत्न करा" },
+    schemes: {
+      title: "सरकारी योजना", searchPlaceholder: "योजना शोधा…", all: "सर्व",
+      central: "केंद्रीय", state: "महाराष्ट्र", womenOnly: "फक्त महिला",
+      benefit: "लाभ", eligibility: "कोण अर्ज करू शकते", documents: "कागदपत्रे",
+      steps: "अर्ज कसा करावा", portal: "अधिकृत पोर्टल", videos: "व्हिडिओ मार्गदर्शन",
+      empty: "योजना सापडल्या नाहीत. फिल्टर काढून पहा.", back: "सर्व योजना",
+      goals: { credit: "कर्ज", skills: "कौशल्य", subsidy: "अनुदान", insurance: "विमा" },
+    },
     voice: { toggleGuide: "आवाज मार्गदर्शन", muteGuide: "आवाज बंद करा", unmuteGuide: "आवाज चालू करा", hear: "ऐका", speak: "बोला", stop: "ऐकणे थांबवा", sttFailed: "ऐकू आले नाही. कृपया पुन्हा बोला.", micDenied: "माइक बंद आहे. बोलण्यासाठी माइकला परवानगी द्या." },
   },
   hindi: {
@@ -292,6 +314,14 @@ export const translations: Record<Language, TranslationStrings> = {
     orders: { title: "ऑर्डर", tag: "जल्द आ रहा है", desc: "विक्रेता ऑर्डर और खरीदार कार्ट यहाँ होगा।" },
     notFound: { title: "नहीं मिला", home: "होम" },
     errorPage: { title: "कुछ गड़बड़ हुई", retry: "फिर कोशिश करें" },
+    schemes: {
+      title: "सरकारी योजनाएं", searchPlaceholder: "योजना खोजें…", all: "सभी",
+      central: "केंद्रीय", state: "महाराष्ट्र", womenOnly: "केवल महिला",
+      benefit: "लाभ", eligibility: "कौन आवेदन कर सकता है", documents: "दस्तावेज़",
+      steps: "आवेदन कैसे करें", portal: "आधिकारिक पोर्टल", videos: "वीडियो गाइड",
+      empty: "कोई योजना नहीं मिली। फिल्टर हटाकर देखें।", back: "सभी योजनाएं",
+      goals: { credit: "कर्ज", skills: "कौशल", subsidy: "सब्सिडी", insurance: "बीमा" },
+    },
     voice: { toggleGuide: "आवाज़ मार्गदर्शन", muteGuide: "आवाज़ बंद करें", unmuteGuide: "आवाज़ चालू करें", hear: "सुनें", speak: "बोलें", stop: "सुनना बंद करें", sttFailed: "सुन नहीं पाए। कृपया फिर से बोलें।", micDenied: "माइक बंद है। बोलने के लिए माइक की अनुमति दें।" },
   },
 };

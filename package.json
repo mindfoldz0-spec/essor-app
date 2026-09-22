@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "voice:download": "node scripts/download-voices.mjs"
+    "voice:download": "node scripts/download-voices.mjs",
+    "schemes:seed": "node scripts/seed-schemes.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.47.0",

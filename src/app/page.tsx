@@ -37,7 +37,7 @@ export default function Home() {
             </>
           ) : (
             <>
-              <Link href="/orders" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
+              <Link href="/schemes" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
                 <div className="text-[13px] font-black">{t.home.schemes}</div><div className="text-[11px] font-bold opacity-60">{t.home.schemesDesc}</div>
               </Link>
               <Link href="/orders" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
