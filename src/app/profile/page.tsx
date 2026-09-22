@@ -7,7 +7,7 @@ import { useUserProfile, signOut, refreshUserProfile } from "@/lib/userProfile";
 import { useLanguage } from "@/lib/languageContext";
 import Loader from "@/components/Loader";
 import { IconPin, IconCheck, IconVideo } from "@/components/icons";
-import GreetingVideo from "@/components/GreetingVideo";
+import FullscreenGreetingVideo from "@/components/FullscreenGreetingVideo";
 import { Language, sellLabel } from "@/lib/translations";
 
 export default function ProfilePage() {
@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const [upiOverride, setUpiOverride] = useState<string | null>(null);
   const [upiSaved, setUpiSaved] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   // Derived during render (no effect): manual edits win, else saved value.
   const upi = upiOverride ?? profile?.upi_vpa ?? "";
 
@@ -76,6 +77,38 @@ export default function ProfilePage() {
             return <button key={l.code} type="button" onClick={()=>setLanguage(l.code)} className={`rounded-[14px] border-[2px] py-2.5 text-[13px] font-black ${active?"bg-[var(--black)] text-white border-[var(--black)]":"bg-white border-[var(--gray-200)] hover:border-[var(--black)]"}`}>{l.label}</button>
           })}
         </div>
+      </div>
+
+      <div className="rounded-[20px] border-[2px] border-[var(--black)] bg-white p-4 shadow-[4px_4px_0_var(--black)]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-[var(--black)] bg-[var(--red)] text-white shadow-[1.5px_1.5px_0_var(--black)]">
+              <IconVideo className="h-4 w-4" />
+            </span>
+            <div>
+              <h2 className="text-[13px] font-black">{language === "marathi" ? "स्वागत व्हिडिओ" : language === "hindi" ? "स्वागत वीडियो" : "Welcome Video"}</h2>
+              <p className="text-[11px] font-bold opacity-60">{language === "marathi" ? "तुमच्या भाषेतील स्वागत संदेश पहा" : language === "hindi" ? "अपनी भाषा में स्वागत संदेश देखें" : "Watch welcome greeting message"}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowVideo(!showVideo)}
+            className={`rounded-full border-[1.5px] border-[var(--black)] px-3.5 py-1 text-[11px] font-black transition-all ${
+              showVideo
+                ? "bg-[var(--black)] text-white"
+                : "bg-[var(--gray-100)] text-[var(--black)] hover:bg-[var(--gray-200)] shadow-[1px_1px_0_var(--black)]"
+            }`}
+          >
+            {showVideo ? (language === "marathi" ? "लपवा" : language === "hindi" ? "छिपाएं" : "Close") : (language === "marathi" ? "पहा" : language === "hindi" ? "देखें" : "Watch")}
+          </button>
+        </div>
+        {showVideo && (
+          <FullscreenGreetingVideo
+            language={language}
+            onFinished={() => setShowVideo(false)}
+            showSkip={true}
+          />
+        )}
       </div>
 
       <div className="rounded-[20px] border-[2px] border-[var(--black)] bg-white p-4 shadow-[4px_4px_0_var(--black)]">

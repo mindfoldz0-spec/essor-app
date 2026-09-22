@@ -8,7 +8,7 @@ import { UserProfile, saveUserProfile, getOnboardingDraft, saveOnboardingDraft, 
 import ProgressHeader from "@/components/onboarding/ProgressHeader";
 import VoiceButton from "@/components/VoiceButton";
 import VoiceField from "@/components/VoiceField";
-import GreetingVideo from "@/components/GreetingVideo";
+import FullscreenGreetingVideo from "@/components/FullscreenGreetingVideo";
 import { useVoice, stopSpeaking, preloadVoices } from "@/lib/voice";
 import { voiceCode, getVoiceText, type VoiceKey, type VoiceCode } from "@/lib/voice-strings";
 import {
@@ -339,6 +339,18 @@ export default function OnboardingPage() {
 
   if (!mounted) return <div className="p-6"><div className="h-6 w-32 animate-pulse rounded bg-[var(--gray-200)]" /></div>;
 
+  const isCompletion = (isSeller && step === 8) || (!isSeller && step === 5);
+
+  if (isCompletion) {
+    return (
+      <FullscreenGreetingVideo
+        language={language}
+        onFinished={handleComplete}
+        showSkip={true}
+      />
+    );
+  }
+
   return (
     <div className="relative min-h-[calc(100vh-140px)] w-full px-4 py-6">
       <div className="relative z-10">
@@ -650,29 +662,7 @@ export default function OnboardingPage() {
           </section>
         )}
 
-        {/* COMPLETION */}
-        {((isSeller && step===8) || (!isSeller && step===5)) && (
-          <section className="rounded-[24px] border-[2px] border-[var(--black)] bg-[var(--white)] p-6 text-center shadow-[4px_4px_0_var(--black)]">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-[2px] border-[var(--black)] bg-[var(--red)] text-white"><IconCheck className="h-7 w-7" /></div>
-            <h1 className="mt-3 text-[24px] font-black">{tr.completionTitle}</h1>
-            <p className="mt-1 text-[14px] font-black text-[var(--red)]">{tr.completionSub(fullName || "Friend")}</p>
 
-            {/* Greeting Video Mapped to Chosen Language */}
-            <div className="my-5">
-              <GreetingVideo
-                initialLanguage={language}
-                userName={fullName || undefined}
-                autoPlay={true}
-              />
-            </div>
-
-            <div className="mt-4 rounded-[14px] border-[2px] border-[var(--black)] bg-[var(--gray-100)] p-3 text-left">
-              <div className="text-[12px] font-black">{fullName} — {locationName}</div>
-              <div className="text-[11px] font-bold opacity-60">{isSeller ? t.role.seller : t.role.buyer} • {t.langName}</div>
-            </div>
-            <button type="button" onClick={handleComplete} disabled={isSaving} className="mt-4 flex h-12 w-full items-center justify-center rounded-full border-[2px] border-[var(--black)] bg-[var(--red)] text-white font-black hover:bg-[var(--red-hover)] disabled:opacity-50">{isSaving?tr.errors.saving:tr.goToHome}</button>
-          </section>
-        )}
       </div>
     </div>
   );
