@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* Essor v0.0.1 — Strict R/W/B Minimal */
+:root {
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --red: #e10600;
+  --red-hover: #b50500;
+  --red-soft: #fff0f0;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-600: #737373;
+  --background: var(--white);
+  --foreground: var(--black);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--red) var(--white); }
+html { scroll-behavior: smooth; }
+body {
+  background: #efefef;
+  color: var(--black);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+@media (max-width: 430px) { body { background: var(--white); } }
+::selection { background: var(--red); color: var(--white); }
+*:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
