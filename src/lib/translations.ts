@@ -10,13 +10,11 @@ export function isLanguage(value: unknown): value is Language {
 export interface TranslationStrings {
   langName: string;
   continue: string;
-  back: string;
   listen: string;
   listening: string;
   loading: string;
-  skipForNow: string;
   stepIndicator: (c: number, t: number) => string;
-  nav: { home: string; explore: string; search: string; profile: string; cart: string; orders: string };
+  nav: { home: string; search: string; profile: string; orders: string };
   role: { title: string; subtitle: string; seller: string; sellerSub: string; buyer: string; buyerSub: string };
   onboarding: {
     // Language
@@ -37,8 +35,8 @@ export interface TranslationStrings {
     goalTitle: string; goalHelper: string; goalCredit: string; goalCustomers: string; goalSkills: string;
     womanTitle: string; womanHelper: string; yes: string; no: string;
     phoneTitle: string; phoneHelper: string; phonePlaceholder: string; phoneFocus: string;
-    buyerPrefTitle: string; buyerPrefHelper: string; buyerPrefFocus: string;
-    photoTitle: string; photoHelper: string; addPhoto: string; changePhoto: string;
+    buyerPrefTitle: string; buyerPrefHelper: string;
+    photoHelper: string; addPhoto: string; changePhoto: string;
     completionTitle: string; completionSub: (n: string) => string; goToHome: string;
     businessNamePlaceholder: string;
     errors: {
@@ -57,9 +55,9 @@ export interface TranslationStrings {
     quick: { shopNearby: string; shopNearbyDesc: string; myOrders: string; myOrdersDesc: string };
   };
   profile: {
-    title: string; noProfileTitle: string; noProfileDesc: string; goOnboarding: string;
+    noProfileTitle: string; noProfileDesc: string; goOnboarding: string;
     role: string; language: string; location: string; business: string; goal: string; phone: string; woman: string;
-    edit: string; switchToBuyer: string; switchToSeller: string; home: string;
+    edit: string; home: string;
     details: {
       whatSell: string; preferences: string; notSet: string; yesUnlocked: string; no: string;
       district: string; state: string; pincode: string; deviceId: string;
@@ -126,9 +124,9 @@ export function sellLabel(value: string, lang: Language): string {
 
 export const translations: Record<Language, TranslationStrings> = {
   english: {
-    langName: "English", continue: "Continue", back: "Back", listen: "Listen", listening: "Playing...", loading: "Loading...", skipForNow: "Skip for now",
+    langName: "English", continue: "Continue", listen: "Listen", listening: "Playing...", loading: "Loading...",
     stepIndicator: (c, t) => `Step ${c} of ${t}`,
-    nav: { home: "Home", explore: "Explore", search: "Search", profile: "Profile", cart: "Cart", orders: "Orders" },
+    nav: { home: "Home", search: "Search", profile: "Profile", orders: "Orders" },
     role: { title: "How will you use Essor?", subtitle: "Choose your role to get started", seller: "I want to Sell", sellerSub: "Farmer, Tailor, Kirana — grow your business", buyer: "I want to Buy", buyerSub: "Shop from nearby sellers" },
     onboarding: {
       chooseLanguageTitle: "Choose your language", chooseLanguageHelper: "This sets the whole app language.",
@@ -141,8 +139,8 @@ export const translations: Record<Language, TranslationStrings> = {
       goalTitle: "What do you need most?", goalHelper: "We will prioritize help for you.", goalCredit: "Credit / Loan", goalCustomers: "More customers", goalSkills: "Skills & training",
       womanTitle: "Are you a woman entrepreneur?", womanHelper: "Unlocks women grants & support.", yes: "Yes", no: "No",
       phoneTitle: "How to reach you?", phoneHelper: "For order updates via SMS when internet low.", phonePlaceholder: "10-digit mobile (optional)", phoneFocus: "Eg. 9876543210 — SMS alerts only",
-      buyerPrefTitle: "What do you like to buy?", buyerPrefHelper: "Tap what you buy most — we show nearby sellers.", buyerPrefFocus: "Pick groceries, clothes, farm produce",
-      photoTitle: "Add a shop photo", photoHelper: "Optional — helps customers trust you.", addPhoto: "Add Photo", changePhoto: "Change Photo",
+      buyerPrefTitle: "What do you like to buy?", buyerPrefHelper: "Tap what you buy most — we show nearby sellers.",
+      photoHelper: "Optional — helps customers trust you.", addPhoto: "Add Photo", changePhoto: "Change Photo",
       completionTitle: "You're all set!", completionSub: (n) => `Welcome to Essor, ${n}. Your profile is ready.`, goToHome: "Go to Essor →",
       businessNamePlaceholder: "Eg. Patil Kirana",
       errors: {
@@ -165,9 +163,9 @@ export const translations: Record<Language, TranslationStrings> = {
       quick: { shopNearby: "Shop Nearby", shopNearbyDesc: "Kirana, Tailor, Farm", myOrders: "My Orders", myOrdersDesc: "Track delivery" },
     },
     profile: {
-      title: "Profile", noProfileTitle: "No profile yet", noProfileDesc: "Complete onboarding to unlock Essor.", goOnboarding: "Go to Onboarding →",
+      noProfileTitle: "No profile yet", noProfileDesc: "Complete onboarding to unlock Essor.", goOnboarding: "Go to Onboarding →",
       role: "Role", language: "Language", location: "Location", business: "Business", goal: "Goal", phone: "Phone", woman: "Woman Entrepreneur",
-      edit: "Edit Profile", switchToBuyer: "Switch to Buying", switchToSeller: "Switch to Selling", home: "Home",
+      edit: "Edit Profile", home: "Home",
       details: {
         whatSell: "What you sell", preferences: "Preferences", notSet: "Not set",
         yesUnlocked: "Yes — unlocked", no: "No",
@@ -181,9 +179,9 @@ export const translations: Record<Language, TranslationStrings> = {
     voice: { toggleGuide: "Voice guidance", muteGuide: "Mute voice guidance", unmuteGuide: "Unmute voice guidance", hear: "Hear", speak: "Speak", stop: "Stop listening" },
   },
   marathi: {
-    langName: "मराठी", continue: "पुढे जा", back: "मागे", listen: "ऐका", listening: "सुरू आहे...", loading: "लोड होत आहे...", skipForNow: "वगळा",
+    langName: "मराठी", continue: "पुढे जा", listen: "ऐका", listening: "सुरू आहे...", loading: "लोड होत आहे...",
     stepIndicator: (c, t) => `पायरी ${c} / ${t}`,
-    nav: { home: "मुख्य", explore: "एक्सप्लोर", search: "शोधा", profile: "प्रोफाइल", cart: "कार्ट", orders: "ऑर्डर" },
+    nav: { home: "मुख्य", search: "शोधा", profile: "प्रोफाइल", orders: "ऑर्डर" },
     role: { title: "Essor कसे वापराल?", subtitle: "तुमची भूमिका निवडा", seller: "मला विकायचे आहे", sellerSub: "शेतकरी, शिंपी, किराणा — व्यवसाय वाढवा", buyer: "मला खरेदी करायचे आहे", buyerSub: "जवळच्या विक्रेत्यांकडून खरेदी करा" },
     onboarding: {
       chooseLanguageTitle: "आपली भाषा निवडा", chooseLanguageHelper: "संपूर्ण ॲपची भाषा सेट होईल.",
@@ -196,8 +194,8 @@ export const translations: Record<Language, TranslationStrings> = {
       goalTitle: "सर्वात जास्त काय हवे?", goalHelper: "त्याप्रमाणे मदत करू.", goalCredit: "कर्ज / भांडवल", goalCustomers: "जास्त ग्राहक", goalSkills: "कौशल्य / प्रशिक्षण",
       womanTitle: "तुम्ही महिला उद्योजक आहात का?", womanHelper: "महिला अनुदान उपलब्ध.", yes: "होय", no: "नाही",
       phoneTitle: "संपर्क कसा करावा?", phoneHelper: "इंटरनेट कमी असताना SMS साठी.", phonePlaceholder: "10-अंकी मोबाईल (ऐच्छिक)", phoneFocus: "उदा. 9876543210",
-      buyerPrefTitle: "काय खरेदी करता?", buyerPrefHelper: "जवळचे विक्रेते दाखवू.", buyerPrefFocus: "किराणा, कपडे, शेतमाल निवडा",
-      photoTitle: "दुकानाचा फोटो", photoHelper: "ऐच्छिक — विश्वास वाढतो.", addPhoto: "फोटो जोडा", changePhoto: "बदला",
+      buyerPrefTitle: "काय खरेदी करता?", buyerPrefHelper: "जवळचे विक्रेते दाखवू.",
+      photoHelper: "ऐच्छिक — विश्वास वाढतो.", addPhoto: "फोटो जोडा", changePhoto: "बदला",
       completionTitle: "सर्व तयार!", completionSub: (n) => `Essor मध्ये स्वागत, ${n}.`, goToHome: "Essor सुरू करा →",
       businessNamePlaceholder: "उदा. पाटील किराणा",
       errors: {
@@ -221,9 +219,9 @@ export const translations: Record<Language, TranslationStrings> = {
       quick: { shopNearby: "जवळ खरेदी करा", shopNearbyDesc: "किराणा, शिंपी, शेतकरी", myOrders: "माझ्या ऑर्डर", myOrdersDesc: "डिलिव्हरी तपासा" },
     },
     profile: {
-      title: "प्रोफाइल", noProfileTitle: "प्रोफाइल नाही", noProfileDesc: "सुरू करण्यासाठी नोंदणी करा.", goOnboarding: "नोंदणी करा →",
+      noProfileTitle: "प्रोफाइल नाही", noProfileDesc: "सुरू करण्यासाठी नोंदणी करा.", goOnboarding: "नोंदणी करा →",
       role: "भूमिका", language: "भाषा", location: "स्थान", business: "व्यवसाय", goal: "ध्येय", phone: "फोन", woman: "महिला उद्योजक",
-      edit: "बदला", switchToBuyer: "खरेदीवर जा", switchToSeller: "विक्रीवर जा", home: "मुख्य",
+      edit: "बदला", home: "मुख्य",
       details: {
         whatSell: "काय विकता", preferences: "आवडी", notSet: "सेट नाही",
         yesUnlocked: "होय — अनलॉक", no: "नाही",
@@ -237,9 +235,9 @@ export const translations: Record<Language, TranslationStrings> = {
     voice: { toggleGuide: "आवाज मार्गदर्शन", muteGuide: "आवाज बंद करा", unmuteGuide: "आवाज चालू करा", hear: "ऐका", speak: "बोला", stop: "ऐकणे थांबवा" },
   },
   hindi: {
-    langName: "हिंदी", continue: "आगे बढ़ें", back: "पीछे", listen: "सुनें", listening: "चल रहा है...", loading: "लोड हो रहा है...", skipForNow: "छोड़ें",
+    langName: "हिंदी", continue: "आगे बढ़ें", listen: "सुनें", listening: "चल रहा है...", loading: "लोड हो रहा है...",
     stepIndicator: (c, t) => `चरण ${c} / ${t}`,
-    nav: { home: "होम", explore: "एक्सप्लोर", search: "खोजें", profile: "प्रोफ़ाइल", cart: "कार्ट", orders: "ऑर्डर" },
+    nav: { home: "होम", search: "खोजें", profile: "प्रोफ़ाइल", orders: "ऑर्डर" },
     role: { title: "Essor कैसे इस्तेमाल करेंगे?", subtitle: "भूमिका चुनें", seller: "मुझे बेचना है", sellerSub: "किसान, दर्जी, किराना — बिज़नेस बढ़ाएं", buyer: "मुझे खरीदना है", buyerSub: "नज़दीकी विक्रेताओं से खरीदें" },
     onboarding: {
       chooseLanguageTitle: "भाषा चुनें", chooseLanguageHelper: "पूरे ऐप की भाषा सेट होगी.",
@@ -252,8 +250,8 @@ export const translations: Record<Language, TranslationStrings> = {
       goalTitle: "सबसे ज्यादा क्या चाहिए?", goalHelper: "उस हिसाब से मदद करेंगे.", goalCredit: "कर्ज / पूंजी", goalCustomers: "ज्यादा ग्राहक", goalSkills: "कौशल / ट्रेनिंग",
       womanTitle: "क्या आप महिला उद्यमी हैं?", womanHelper: "महिला अनुदान मिलेगा.", yes: "हाँ", no: "नहीं",
       phoneTitle: "कैसे संपर्क करें?", phoneHelper: "इंटरनेट कम होने पर SMS के लिए.", phonePlaceholder: "10-अंकीय मोबाइल (वैकल्पिक)", phoneFocus: "उदा. 9876543210",
-      buyerPrefTitle: "क्या खरीदते हैं?", buyerPrefHelper: "नज़दीकी विक्रेता दिखाएंगे.", buyerPrefFocus: "किराणा, कपड़े, कृषि उत्पाद चुनें",
-      photoTitle: "दुकान फोटो", photoHelper: "वैकल्पिक — भरोसा बढ़ता है.", addPhoto: "फोटो जोड़ें", changePhoto: "बदलें",
+      buyerPrefTitle: "क्या खरीदते हैं?", buyerPrefHelper: "नज़दीकी विक्रेता दिखाएंगे.",
+      photoHelper: "वैकल्पिक — भरोसा बढ़ता है.", addPhoto: "फोटो जोड़ें", changePhoto: "बदलें",
       completionTitle: "सब तैयार!", completionSub: (n) => `Essor में स्वागत, ${n}.`, goToHome: "Essor शुरू करें →",
       businessNamePlaceholder: "उदा. पाटिल किराना",
       errors: {
@@ -277,9 +275,9 @@ export const translations: Record<Language, TranslationStrings> = {
       quick: { shopNearby: "आसपास खरीदें", shopNearbyDesc: "किराना, दर्जी, किसान", myOrders: "मेरे ऑर्डर", myOrdersDesc: "डिलीवरी ट्रैक करें" },
     },
     profile: {
-      title: "प्रोफ़ाइल", noProfileTitle: "प्रोफ़ाइल नहीं", noProfileDesc: "शुरू करने के लिए पंजीकरण करें.", goOnboarding: "पंजीकरण करें →",
+      noProfileTitle: "प्रोफ़ाइल नहीं", noProfileDesc: "शुरू करने के लिए पंजीकरण करें.", goOnboarding: "पंजीकरण करें →",
       role: "भूमिका", language: "भाषा", location: "स्थान", business: "बिज़नेस", goal: "लक्ष्य", phone: "फोन", woman: "महिला उद्यमी",
-      edit: "बदलें", switchToBuyer: "खरीद पर जाएं", switchToSeller: "बेचने पर जाएं", home: "होम",
+      edit: "बदलें", home: "होम",
       details: {
         whatSell: "क्या बेचते हैं", preferences: "पसंद", notSet: "सेट नहीं",
         yesUnlocked: "हाँ — अनलॉक", no: "नहीं",

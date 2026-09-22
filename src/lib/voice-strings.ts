@@ -13,6 +13,8 @@ export const VOICE_KEYS = [
   "page_language",
   "lang_picked",
   "page_role",
+  "role_picked_seller",
+  "role_picked_buyer",
   "page_name",
   "f_name_hint",
   "page_location",
@@ -24,7 +26,6 @@ export const VOICE_KEYS = [
   "f_contact",
   "page_done",
   "a_listen",
-  "a_tapfield",
 ] as const;
 
 export type VoiceKey = (typeof VOICE_KEYS)[number];
@@ -47,6 +48,16 @@ export const VOICE_STRINGS: Strings = {
     "en-IN": "You have chosen English. I will guide you in English from now on.",
     "hi-IN": "आपने हिंदी भाषा चुनी है। अब से मैं आपको हिंदी में बताऊंगा।",
     "mr-IN": "तुम्ही मराठी भाषा निवडली आहे. यापुढे मी तुम्हाला मराठीत सांगेन.",
+  },
+  role_picked_seller: {
+    "en-IN": "You chose Seller. I will help you grow your business, step by step.",
+    "hi-IN": "आपने विक्रेता चुना है। मैं आपका बिज़नेस बढ़ाने में मदद करूंगा।",
+    "mr-IN": "तुम्ही विक्रेता निवडले आहे. मी तुमचा व्यवसाय वाढवायला मदत करेन.",
+  },
+  role_picked_buyer: {
+    "en-IN": "You chose Buyer. I will show you good sellers near you.",
+    "hi-IN": "आपने खरीदार चुना है। मैं आपको पास के अच्छे विक्रेता दिखाऊंगा।",
+    "mr-IN": "तुम्ही खरेदीदार निवडले आहे. मी तुम्हाला जवळचे चांगले विक्रेते दाखवेन.",
   },
   page_name: {
     "en-IN": "Now tell us your name. This name will appear on your shop and your profile.",
@@ -102,11 +113,6 @@ export const VOICE_STRINGS: Strings = {
     "en-IN": "Listening. Please speak now.",
     "hi-IN": "सुन रहा हूँ। कृपया अभी बोलें।",
     "mr-IN": "ऐकत आहे. कृपया आता बोला.",
-  },
-  a_tapfield: {
-    "en-IN": "Tap the speaker to listen. Tap the mic to speak your answer.",
-    "hi-IN": "सुनने के लिए स्पीकर दबाएं। जवाब बोलने के लिए माइक दबाएं।",
-    "mr-IN": "ऐकण्यासाठी स्पीकर दाबा. उत्तर बोलण्यासाठी माइक दाबा.",
   },
 };
 

@@ -27,7 +27,7 @@ async function exists(path) {
 }
 
 async function downloadOne(item, attempt = 1) {
-  const { key, lang, text, file } = item;
+  const { lang, text, file } = item;
   const dest = join(ROOT, file);
   if (await exists(dest)) return { ok: true, skipped: true, bytes: 0 };
   try {

@@ -177,7 +177,7 @@ export default function OnboardingPage() {
       stopSpeaking();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, step, role]);
+  }, [mounted, step]);
 
   // Stop audio when leaving the flow
   useEffect(() => () => stopSpeaking(), []);
@@ -389,11 +389,19 @@ export default function OnboardingPage() {
             <p className="mt-1 text-[13px] font-bold opacity-60">{t.role.subtitle}</p>
             <p className="mt-1 text-[12px] font-bold opacity-40">{tr.roleHelper}</p>
             <div className="mt-6 grid grid-cols-1 gap-3">
-              <button type="button" onClick={()=>setRole("seller")}
+              <button type="button" onClick={()=>{
+                  setRole("seller");
+                  const code = voiceCode(language);
+                  speak(getVoiceText("role_picked_seller", code), `role_picked_seller:${code}`, { interrupt: true });
+                }}
                 className={`rounded-[18px] border-[2px] border-[var(--black)] p-4 text-left ${role==="seller"?"bg-[var(--black)] text-white":"bg-[var(--white)] hover:bg-[var(--gray-100)]"}`}>
                 <div className="flex items-center gap-2 text-[16px] font-black"><IconStore className="h-6 w-6 shrink-0" /> {t.role.seller}</div><div className="text-[12px] font-bold opacity-70">{t.role.sellerSub}</div>
               </button>
-              <button type="button" onClick={()=>setRole("buyer")}
+              <button type="button" onClick={()=>{
+                  setRole("buyer");
+                  const code = voiceCode(language);
+                  speak(getVoiceText("role_picked_buyer", code), `role_picked_buyer:${code}`, { interrupt: true });
+                }}
                 className={`rounded-[18px] border-[2px] border-[var(--black)] p-4 text-left ${role==="buyer"?"bg-[var(--black)] text-white":"bg-[var(--white)] hover:bg-[var(--gray-100)]"}`}>
                 <div className="flex items-center gap-2 text-[16px] font-black"><IconCart className="h-6 w-6 shrink-0" /> {t.role.buyer}</div><div className="text-[12px] font-bold opacity-70">{t.role.buyerSub}</div>
               </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 import type { VoiceCode } from "./voice-strings";
 import { VOICE_KEYS } from "./voice-strings";
 import { shortHash } from "./voice-key";
@@ -54,6 +54,56 @@ function browserSpeak(text: string, lang: VoiceCode) {
   } catch {
     /* ignore */
   }
+}
+
+// Browsers block <audio> playback before the first tap, but device speech
+// synthesis usually still talks — so pre-tap auto-plays use it directly
+// (zero network, best chance of being heard on first landing).
+let hasInteracted = false;
+if (typeof window !== "undefined") {
+  const mark = () => {
+    hasInteracted = true;
+  };
+  window.addEventListener("pointerdown", mark, { once: true });
+  window.addEventListener("keydown", mark, { once: true });
+}
+
+/** Device TTS, awaitable: resolves when the utterance ends (or safety timeout). */
+function browserSpeakAsync(text: string, lang: VoiceCode, myGen: number): Promise<void> {
+  return new Promise((resolve) => {
+    try {
+      const synth = window.speechSynthesis;
+      if (!synth) return resolve();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = 0.95;
+      let done = false;
+      const finish = () => {
+        if (!done) {
+          done = true;
+          resolve();
+        }
+      };
+      u.onend = finish;
+      u.onerror = finish;
+      // Safety: never hold the audio lock longer than the estimate.
+      const estimate = Math.min(15000, Math.max(3000, text.length * 120));
+      setTimeout(finish, estimate);
+      synth.cancel();
+      synth.speak(u);
+      // A newer clip took over while we queued — drop this one at once.
+      if (myGen !== generation) {
+        try {
+          synth.cancel();
+        } catch {
+          /* ignore */
+        }
+        finish();
+      }
+    } catch {
+      resolve();
+    }
+  });
 }
 
 let currentAudio: HTMLAudioElement | null = null;
@@ -174,7 +224,20 @@ export async function speakText(
   const alive = () => {
     if (myGen !== generation) throw new SpeechCancelled();
   };
+  const release = () => {
+    if (myGen === generation) isPlaying = false;
+  };
   try {
+    // No tap yet (first landing): <audio> would be blocked, so talk with
+    // device speech instead of burning a Sarvam call that can't be heard.
+    if (!hasInteracted) {
+      try {
+        await browserSpeakAsync(text, lang, myGen);
+      } finally {
+        release();
+      }
+      return;
+    }
     // 0. Pre-baked clip — instant, no network API, no delay.
     // cacheKey format is "<voiceKey>:<lang>", e.g. "page_role:hi-IN".
     if (opts?.cacheKey) {
@@ -224,7 +287,7 @@ export async function speakText(
       throw new Error("empty audio");
     } catch (e) {
       if (e instanceof SpeechCancelled || e instanceof AutoplayBlocked) throw e;
-      browserSpeak(text, lang);
+      await browserSpeakAsync(text, lang, myGen);
     }
   } catch (e) {
     // Cancelled / autoplay-blocked: stay silent. Anything else already fell
@@ -248,35 +311,11 @@ function versionOf(text: string): string {
 }
 
 export function useVoice(lang: VoiceCode) {
-  const [autoSpeak, setAutoSpeak] = useState(true);
-  const langRef = useRef(lang);
-  langRef.current = lang;
-
   const speak = useCallback(
     (text: string, cacheKey?: string, opts?: { interrupt?: boolean }) =>
-      speakText(text, langRef.current, { cacheKey, interrupt: opts?.interrupt }),
-    []
+      speakText(text, lang, { cacheKey, interrupt: opts?.interrupt }),
+    [lang]
   );
 
-  useEffect(() => {
-    try {
-      if (localStorage.getItem("essor-autospeak") === "off") setAutoSpeak(false);
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  const toggleAuto = () => {
-    setAutoSpeak((v) => {
-      try {
-        localStorage.setItem("essor-autospeak", v ? "off" : "on");
-      } catch {
-        /* ignore */
-      }
-      if (v) stopSpeaking();
-      return !v;
-    });
-  };
-
-  return { speak, stop: stopSpeaking, autoSpeak, toggleAuto };
+  return { speak, stop: stopSpeaking };
 }

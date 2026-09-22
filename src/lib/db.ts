@@ -30,7 +30,6 @@ const rawUrl = process.env.DATABASE_URL ?? "";
 const connectionString = rawUrl ? cleanConnectionString(rawUrl) : rawUrl;
 
 declare global {
-  // eslint-disable-next-line no-var
   var __essor_pg_pool: Pool | undefined;
 }
 
