@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useUserProfile, signOut, refreshUserProfile } from "@/lib/userProfile";
 import { useLanguage } from "@/lib/languageContext";
 import Loader from "@/components/Loader";
-import { IconPin, IconCheck } from "@/components/icons";
+import { IconPin, IconCheck, IconVideo } from "@/components/icons";
+import GreetingVideo from "@/components/GreetingVideo";
 import { Language, sellLabel } from "@/lib/translations";
 
 export default function ProfilePage() {

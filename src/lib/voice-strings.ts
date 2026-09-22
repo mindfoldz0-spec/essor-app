@@ -28,6 +28,7 @@ export const VOICE_KEYS = [
   "page_khata",
   "page_samuday",
   "page_orders",
+  "order_paid",
   "a_listen",
 ] as const;
 
@@ -131,6 +132,11 @@ export const VOICE_STRINGS: Strings = {
     "en-IN": "All your deals live here as order threads. Move each one from open to done.",
     "hi-IN": "आपके सभी सौदे यहां ऑर्डर के रूप में रहते हैं। हर एक को शुरू से पूरा तक ले जाएं।",
     "mr-IN": "तुमचे सर्व व्यवहार इथे ऑर्डर म्हणून राहतात. प्रत्येकाला सुरुवातीपासून पूर्णत्वाकडे न्या.",
+  },
+  order_paid: {
+    "en-IN": "Payment received. I have written it in your Khata.",
+    "hi-IN": "भुगतान मिल गया। मैंने इसे आपके खाते में लिख दिया है।",
+    "mr-IN": "पेमेंट मिळाले. मी ते तुमच्या खात्यात लिहिले आहे.",
   },
 };
 

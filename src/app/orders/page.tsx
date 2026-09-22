@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/languageContext";
+import { useUserProfile } from "@/lib/userProfile";
 import Loader from "@/components/Loader";
 import VoiceButton from "@/components/VoiceButton";
 import { voiceCode, getVoiceText } from "@/lib/voice-strings";
+import { speakText } from "@/lib/voice";
 
 interface Order {
   id: string;
@@ -29,6 +31,7 @@ function deviceId(): string | null {
 
 export default function OrdersPage() {
   const { t, language } = useLanguage();
+  const profile = useUserProfile();
   const vc = voiceCode(language);
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [title, setTitle] = useState("");
@@ -36,6 +39,7 @@ export default function OrdersPage() {
   const [amount, setAmount] = useState("");
   const [saving, setSaving] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     const id = deviceId();
@@ -85,18 +89,44 @@ export default function OrdersPage() {
     }
   };
 
+  const nextStatus = (o: Order): string | null => {
+    const idx = FLOW.indexOf(o.status as (typeof FLOW)[number]);
+    return idx >= 0 && idx < FLOW.length - 1 ? FLOW[idx + 1] : null;
+  };
+
   const advance = async (o: Order) => {
     const id = deviceId();
     if (!id) return;
-    const idx = FLOW.indexOf(o.status as (typeof FLOW)[number]);
-    const next = idx >= 0 && idx < FLOW.length - 1 ? FLOW[idx + 1] : null;
+    const next = nextStatus(o);
     if (!next) return;
     const res = await fetch("/api/orders", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: o.id, device_id: id, status: next }),
     });
-    if (res.ok) setReloadKey((k) => k + 1);
+    if (!res.ok) return;
+    // Closing the money loop: a Paid deal auto-writes a Khata receipt,
+    // so the Credit Passport grows by itself. No double bookkeeping.
+    if (next === "paid") {
+      try {
+        await fetch("/api/khata", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            device_id: id,
+            person_name: o.counterparty_name || o.title,
+            amount: Number(o.amount) || 0,
+            kind: "jama",
+            note: `order:${o.id}`,
+          }),
+        });
+        const code = voiceCode(language);
+        await speakText(getVoiceText("order_paid", code), code, { cacheKey: `order_paid:${code}`, interrupt: true });
+      } catch {
+        /* order already advanced — khata receipt is best-effort */
+      }
+    }
+    setReloadKey((k) => k + 1);
   };
 
   const statusLabel = (s: string) =>
@@ -153,12 +183,21 @@ export default function OrdersPage() {
             {t.orders.empty}
           </div>
         )}
-        {(orders ?? []).map((o) => (
+        {(orders ?? []).map((o) => {
+          const next = nextStatus(o);
+          const ageDays = Math.floor((now - new Date(o.created_at).getTime()) / 86400000);
+          const overdue = o.status === "open" && ageDays > 3;
+          const upi = profile?.upi_vpa || "";
+          const collectUrl =
+            upi && Number(o.amount) > 0 && (o.status === "open" || o.status === "confirmed")
+              ? `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(profile?.full_name || "Essor")}&am=${Number(o.amount)}&cu=INR&tn=${encodeURIComponent(o.title.slice(0, 40))}`
+              : null;
+          return (
           <div key={o.id} className="rounded-[18px] border-[2px] border-[var(--black)] bg-white p-4 shadow-[4px_4px_0_var(--black)]">
             <div className="flex items-start justify-between gap-2">
               <div className="text-[15px] font-black leading-snug">{o.title}</div>
-              <span className="shrink-0 rounded-full bg-[var(--gray-100)] px-2.5 py-0.5 text-[10px] font-black">
-                {statusLabel(o.status)}
+              <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-black ${overdue ? "bg-[var(--red)] text-white" : "bg-[var(--gray-100)]"}`}>
+                {overdue ? t.orders.openDays(ageDays) : statusLabel(o.status)}
               </span>
             </div>
             {(o.counterparty_name || Number(o.amount) > 0) && (
@@ -166,17 +205,26 @@ export default function OrdersPage() {
                 {o.counterparty_name}{o.counterparty_name && Number(o.amount) > 0 ? " • " : ""}{Number(o.amount) > 0 ? `₹${o.amount}` : ""}
               </div>
             )}
-            {FLOW.includes(o.status as (typeof FLOW)[number]) && (
+            {collectUrl && (
+              <a
+                href={collectUrl}
+                className="mt-3 flex h-10 w-full items-center justify-center rounded-full border-[2px] border-[var(--black)] bg-[var(--red)] text-white text-[12px] font-black"
+              >
+                {t.orders.collect}
+              </a>
+            )}
+            {next && (
               <button
                 type="button"
                 onClick={() => advance(o)}
                 className="mt-3 flex h-10 w-full items-center justify-center rounded-full border-[1.5px] border-[var(--black)] bg-white text-[12px] font-black hover:bg-[var(--gray-100)]"
               >
-                {t.orders.advance} → {statusLabel(FLOW[FLOW.indexOf(o.status as (typeof FLOW)[number]) + 1])}
+                {t.orders.advance} → {statusLabel(next)}
               </button>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

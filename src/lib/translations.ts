@@ -70,7 +70,7 @@ export interface TranslationStrings {
   search: { title: string; tag: string; desc: string };
   orders: {
     title: string; newTitle: string; newPlaceholder: string; withLabel: string; amountLabel: string;
-    add: string; empty: string; advance: string;
+    add: string; empty: string; advance: string; collect: string; openDays: (n: number) => string;
     statuses: { open: string; confirmed: string; paid: string; delivered: string; cancelled: string };
   };
   notFound: { title: string; home: string };
@@ -208,6 +208,7 @@ export const translations: Record<Language, TranslationStrings> = {
     orders: {
       title: "Orders", newTitle: "New order", newPlaceholder: "What? Eg. 20kg wheat",
       withLabel: "With whom?", amountLabel: "Amount ₹", add: "Add Order", empty: "No orders yet.", advance: "Next step",
+      collect: "Collect via UPI", openDays: (n) => `${n} days open`,
       statuses: { open: "Open", confirmed: "Confirmed", paid: "Paid", delivered: "Done", cancelled: "Cancelled" },
     },
     notFound: { title: "Not Found", home: "Home" },
@@ -300,6 +301,7 @@ export const translations: Record<Language, TranslationStrings> = {
     orders: {
       title: "ऑर्डर", newTitle: "नवीन ऑर्डर", newPlaceholder: "काय? उदा. 20 किलो गहू",
       withLabel: "कोणासोबत?", amountLabel: "रक्कम ₹", add: "ऑर्डर जोडा", empty: "अजून ऑर्डर नाहीत.", advance: "पुढे न्या",
+      collect: "UPI ने घ्या", openDays: (n) => `${n} दिवसांपासून खुले`,
       statuses: { open: "खुले", confirmed: "पक्के", paid: "पेमेंट", delivered: "पूर्ण", cancelled: "रद्द" },
     },
     notFound: { title: "सापडले नाही", home: "मुख्य" },
@@ -392,6 +394,7 @@ export const translations: Record<Language, TranslationStrings> = {
     orders: {
       title: "ऑर्डर", newTitle: "नया ऑर्डर", newPlaceholder: "क्या? उदा. 20 किलो गेहूं",
       withLabel: "किसके साथ?", amountLabel: "रकम ₹", add: "ऑर्डर जोड़ें", empty: "अभी कोई ऑर्डर नहीं।", advance: "आगे बढ़ाएं",
+      collect: "UPI से लें", openDays: (n) => `${n} दिन से खुला`,
       statuses: { open: "खुला", confirmed: "पक्का", paid: "भुगतान", delivered: "पूरा", cancelled: "रद्द" },
     },
     notFound: { title: "नहीं मिला", home: "होम" },

@@ -34,4 +34,8 @@ export {
   NotebookPen as IconKhata,
   Users as IconSamuday,
   ShieldCheck as IconShield,
+  Play as IconPlay,
+  Pause as IconPause,
+  RotateCcw as IconReplay,
+  Video as IconVideo,
 } from "lucide-react";

@@ -8,6 +8,7 @@ import { UserProfile, saveUserProfile, getOnboardingDraft, saveOnboardingDraft, 
 import ProgressHeader from "@/components/onboarding/ProgressHeader";
 import VoiceButton from "@/components/VoiceButton";
 import VoiceField from "@/components/VoiceField";
+import GreetingVideo from "@/components/GreetingVideo";
 import { useVoice, stopSpeaking, preloadVoices } from "@/lib/voice";
 import { voiceCode, getVoiceText, type VoiceKey, type VoiceCode } from "@/lib/voice-strings";
 import {
@@ -149,13 +150,13 @@ export default function OnboardingPage() {
     if (step === 3) return { key: "page_name", code: vc };
     if (!isSeller) {
       if (step === 4) return { key: "f_contact", code: vc };
-      return { key: "page_done", code: vc };
+      return null;
     }
     if (step === 4) return { key: "page_location", code: vc };
     if (step === 5) return { key: "f_stage", code: vc };
     if (step === 6) return { key: "f_business", code: vc };
     if (step === 7) return { key: "f_goal", code: vc };
-    return { key: "page_done", code: vc };
+    return null;
   };
   const cur = stepVoice();
   const curText = cur ? getVoiceText(cur.key, cur.code) : "";
@@ -655,6 +656,16 @@ export default function OnboardingPage() {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-[2px] border-[var(--black)] bg-[var(--red)] text-white"><IconCheck className="h-7 w-7" /></div>
             <h1 className="mt-3 text-[24px] font-black">{tr.completionTitle}</h1>
             <p className="mt-1 text-[14px] font-black text-[var(--red)]">{tr.completionSub(fullName || "Friend")}</p>
+
+            {/* Greeting Video Mapped to Chosen Language */}
+            <div className="my-5">
+              <GreetingVideo
+                initialLanguage={language}
+                userName={fullName || undefined}
+                autoPlay={true}
+              />
+            </div>
+
             <div className="mt-4 rounded-[14px] border-[2px] border-[var(--black)] bg-[var(--gray-100)] p-3 text-left">
               <div className="text-[12px] font-black">{fullName} — {locationName}</div>
               <div className="text-[11px] font-bold opacity-60">{isSeller ? t.role.seller : t.role.buyer} • {t.langName}</div>
