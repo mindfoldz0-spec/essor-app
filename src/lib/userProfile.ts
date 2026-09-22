@@ -33,6 +33,9 @@ export interface UserProfile {
   phone: string | null;
   buyer_preferences: string[] | null;
   profile_picture: string | null;
+  upi_vpa?: string | null;
+  is_guide?: boolean;
+  guide_years?: number;
   created_at?: string; updated_at?: string;
 }
 

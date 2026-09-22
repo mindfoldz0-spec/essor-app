@@ -31,4 +31,7 @@ export {
   ShoppingBag as IconGroceries,
   Shirt as IconClothes,
   Carrot as IconFarmProduce,
+  NotebookPen as IconKhata,
+  Users as IconSamuday,
+  ShieldCheck as IconShield,
 } from "lucide-react";

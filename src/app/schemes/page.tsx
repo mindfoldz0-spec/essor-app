@@ -50,7 +50,16 @@ export default function SchemesPage() {
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [level, setLevel] = useState<"all" | "Central" | "Maharashtra">("all");
-  const [goal, setGoal] = useState<string>("all");
+  const [goal, setGoal] = useState<string>(() => {
+    // Deep link support: /schemes?goal=insurance (client-only read, SSR-safe).
+    if (typeof window === "undefined") return "all";
+    try {
+      const g = new URLSearchParams(window.location.search).get("goal");
+      return g && ["credit", "skills", "subsidy", "insurance"].includes(g) ? g : "all";
+    } catch {
+      return "all";
+    }
+  });
   const [womenOnly, setWomenOnly] = useState(false);
   const [mine, setMine] = useState(false);
 

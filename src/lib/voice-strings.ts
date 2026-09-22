@@ -25,6 +25,9 @@ export const VOICE_KEYS = [
   "f_phone_hint",
   "f_contact",
   "page_done",
+  "page_khata",
+  "page_samuday",
+  "page_orders",
   "a_listen",
 ] as const;
 
@@ -113,6 +116,21 @@ export const VOICE_STRINGS: Strings = {
     "en-IN": "Listening. Please speak now.",
     "hi-IN": "सुन रहा हूँ। कृपया अभी बोलें।",
     "mr-IN": "ऐकत आहे. कृपया आता बोला.",
+  },
+  page_khata: {
+    "en-IN": "This is your Khata book. Speak or type every udhaar and jama. Your Credit Passport grows here.",
+    "hi-IN": "यह आपकी खाता बही है। हर उधार और जमा बोलें या लिखें। यहीं आपका क्रेडिट पासपोर्ट बनेगा।",
+    "mr-IN": "ही तुमची खातेवही आहे. प्रत्येक उधार आणि जमा बोला किंवा लिहा. इथेच तुमचा क्रेडिट पासपोर्ट तयार होईल.",
+  },
+  page_samuday: {
+    "en-IN": "This is your Samuday circle of nearby sellers. Ask questions, share advice, meet your guides.",
+    "hi-IN": "यह आपके आसपास के विक्रेताओं का समुदाय है। सवाल पूछें, सलाह बांटें, गाइड से मिलें।",
+    "mr-IN": "हा तुमच्या जवळच्या विक्रेत्यांचा समुदाय आहे. प्रश्न विचारा, सल्ला वाटा, गाइडना भेटा.",
+  },
+  page_orders: {
+    "en-IN": "All your deals live here as order threads. Move each one from open to done.",
+    "hi-IN": "आपके सभी सौदे यहां ऑर्डर के रूप में रहते हैं। हर एक को शुरू से पूरा तक ले जाएं।",
+    "mr-IN": "तुमचे सर्व व्यवहार इथे ऑर्डर म्हणून राहतात. प्रत्येकाला सुरुवातीपासून पूर्णत्वाकडे न्या.",
   },
 };
 

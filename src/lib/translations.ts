@@ -53,6 +53,7 @@ export interface TranslationStrings {
     greeting: (n?: string) => string; subtitleSeller: string; subtitleBuyer: (loc: string) => string;
     quickTitle: string; schemes: string; schemesDesc: string; market: string; marketDesc: string;
     quick: { shopNearby: string; shopNearbyDesc: string; myOrders: string; myOrdersDesc: string };
+    insurance: { title: string; desc: string };
   };
   profile: {
     noProfileTitle: string; noProfileDesc: string; goOnboarding: string;
@@ -63,9 +64,15 @@ export interface TranslationStrings {
       district: string; state: string; pincode: string; deviceId: string;
       logout: string; logoutConfirm: string;
     };
+    upi: { label: string; hint: string; placeholder: string };
+    guide: { title: string; desc: string; on: string; off: string };
   };
   search: { title: string; tag: string; desc: string };
-  orders: { title: string; tag: string; desc: string };
+  orders: {
+    title: string; newTitle: string; newPlaceholder: string; withLabel: string; amountLabel: string;
+    add: string; empty: string; advance: string;
+    statuses: { open: string; confirmed: string; paid: string; delivered: string; cancelled: string };
+  };
   notFound: { title: string; home: string };
   errorPage: { title: string; retry: string };
   schemes: {
@@ -75,6 +82,20 @@ export interface TranslationStrings {
     goals: { credit: string; skills: string; subsidy: string; insurance: string };
   };
   voice: { toggleGuide: string; muteGuide: string; unmuteGuide: string; hear: string; speak: string; stop: string; sttFailed: string; micDenied: string };
+  khata: {
+    title: string; personLabel: string; personPlaceholder: string; amountLabel: string;
+    udhaar: string; jama: string; add: string; empty: string; passport: string; score: string;
+    inflow: string; outflow: string; pending: string; entries30d: string; counterparties: string;
+    ready: string; notReady: string;
+  };
+  samuday: {
+    title: string; guides: string; becomeGuide: string; guideOn: string; guideOff: string;
+    yearsLabel: string; askPlaceholder: string; send: string; empty: string; digest: string;
+  };
+  loan: {
+    title: string; qAge: string; qIncome: string; qDocs: string; qHistory: string;
+    yes: string; no: string; yourScore: string; ready: string; almost: string; early: string; viewSchemes: string;
+  };
 }
 
 const catEn: Record<string, string> = {
@@ -168,6 +189,7 @@ export const translations: Record<Language, TranslationStrings> = {
       greeting: (n) => n ? `Welcome, ${n}!` : "Welcome to Essor!", subtitleSeller: "Manage your shop, schemes, and orders.", subtitleBuyer: (loc) => `Shopping near ${loc || "you"} — fresh from local sellers.`,
       quickTitle: "Quick Actions", schemes: "Government Schemes", schemesDesc: "Mudra, PMEGP, loans", market: "Market & Mandi", marketDesc: "Prices near you",
       quick: { shopNearby: "Shop Nearby", shopNearbyDesc: "Kirana, Tailor, Farm", myOrders: "My Orders", myOrdersDesc: "Track delivery" },
+      insurance: { title: "Monsoon cover", desc: "Crop insurance open — tap to see schemes" },
     },
     profile: {
       noProfileTitle: "No profile yet", noProfileDesc: "Complete onboarding to unlock Essor.", goOnboarding: "Go to Onboarding →",
@@ -179,11 +201,37 @@ export const translations: Record<Language, TranslationStrings> = {
         district: "District", state: "State", pincode: "Pincode", deviceId: "Device ID",
         logout: "Log Out", logoutConfirm: "Log out on this phone? Your profile stays saved — this phone will start fresh.",
       },
+      upi: { label: "UPI ID", hint: "Buyers pay you here", placeholder: "name@upi" },
+      guide: { title: "Guide others", desc: "Experienced sellers can mentor newcomers", on: "Guide ON", off: "Guide OFF" },
     },
     search: { title: "Search", tag: "Coming Soon", desc: "Nearby sellers and products will appear here for buyers." },
-    orders: { title: "Orders", tag: "Coming Soon", desc: "Seller orders and buyer cart will live here." },
+    orders: {
+      title: "Orders", newTitle: "New order", newPlaceholder: "What? Eg. 20kg wheat",
+      withLabel: "With whom?", amountLabel: "Amount ₹", add: "Add Order", empty: "No orders yet.", advance: "Next step",
+      statuses: { open: "Open", confirmed: "Confirmed", paid: "Paid", delivered: "Done", cancelled: "Cancelled" },
+    },
     notFound: { title: "Not Found", home: "Home" },
     errorPage: { title: "Something went wrong", retry: "Try Again" },
+    khata: {
+      title: "Khata Book", personLabel: "Name", personPlaceholder: "Who? Eg. Ramesh", amountLabel: "Amount ₹",
+      udhaar: "Udhaar (given)", jama: "Jama (received)", add: "Add Entry",
+      empty: "No entries yet. Speak or type the first one.",
+      passport: "Credit Passport", score: "Trust Score", inflow: "Received", outflow: "Given",
+      pending: "Net pending", entries30d: "Entries (30 days)", counterparties: "People",
+      ready: "Loan-ready", notReady: "Keep writing daily",
+    },
+    samuday: {
+      title: "Samuday", guides: "Guides near you", becomeGuide: "Become a Guide",
+      guideOn: "You are a Guide", guideOff: "Guide off", yearsLabel: "Years of experience",
+      askPlaceholder: "Ask your circle…", send: "Send", empty: "No messages yet. Start the conversation.", digest: "Play village digest",
+    },
+    loan: {
+      title: "Loan Readiness", qAge: "Business older than 1 year?", qIncome: "Monthly income above ₹15,000?",
+      qDocs: "Aadhaar + bank account ready?", qHistory: "10+ Khata entries written?",
+      yes: "Yes", no: "No", yourScore: "Your score",
+      ready: "Mudra-ready! Apply now.", almost: "Almost there — fix the missing items.", early: "Too early — build Khata history first.",
+      viewSchemes: "See loan schemes",
+    },
     schemes: {
       title: "Government Schemes", searchPlaceholder: "Search schemes…", all: "All",
       central: "Central", state: "Maharashtra", womenOnly: "Women only",
@@ -233,6 +281,7 @@ export const translations: Record<Language, TranslationStrings> = {
       subtitleBuyer: (loc) => `${loc || "तुमच्या"} जवळ खरेदी — स्थानिक विक्रेत्यांकडून.`,
       quickTitle: "मुख्य पर्याय", schemes: "सरकारी योजना", schemesDesc: "मुद्रा, PMEGP, कर्ज", market: "बाजारभाव", marketDesc: "जवळचे भाव",
       quick: { shopNearby: "जवळ खरेदी करा", shopNearbyDesc: "किराणा, शिंपी, शेतकरी", myOrders: "माझ्या ऑर्डर", myOrdersDesc: "डिलिव्हरी तपासा" },
+      insurance: { title: "मान्सून कवच", desc: "पीक विमा खुला आहे — योजना पहा" },
     },
     profile: {
       noProfileTitle: "प्रोफाइल नाही", noProfileDesc: "सुरू करण्यासाठी नोंदणी करा.", goOnboarding: "नोंदणी करा →",
@@ -244,11 +293,37 @@ export const translations: Record<Language, TranslationStrings> = {
         district: "जिल्हा", state: "राज्य", pincode: "पिनकोड", deviceId: "डिव्हाइस ID",
         logout: "लॉग आउट", logoutConfirm: "या फोनवर लॉग आउट करायचे? तुमची प्रोफाइल जतन राहील — हा फोन नव्याने सुरू होईल."
       },
+      upi: { label: "UPI ID", hint: "खरेदीदार येथे पेमेंट करतील", placeholder: "name@upi" },
+      guide: { title: "इतरांना शिकवा", desc: "अनुभवी विक्रेते नवख्यांना मदत करा", on: "गाइड चालू", off: "गाइड बंद" },
     },
     search: { title: "शोधा", tag: "लवकरच येत आहे", desc: "खरेदीदारांसाठी जवळचे विक्रेते आणि उत्पादने येथे दिसतील." },
-    orders: { title: "ऑर्डर", tag: "लवकरच येत आहे", desc: "विक्रेता ऑर्डर आणि खरेदीदार कार्ट येथे असेल." },
+    orders: {
+      title: "ऑर्डर", newTitle: "नवीन ऑर्डर", newPlaceholder: "काय? उदा. 20 किलो गहू",
+      withLabel: "कोणासोबत?", amountLabel: "रक्कम ₹", add: "ऑर्डर जोडा", empty: "अजून ऑर्डर नाहीत.", advance: "पुढे न्या",
+      statuses: { open: "खुले", confirmed: "पक्के", paid: "पेमेंट", delivered: "पूर्ण", cancelled: "रद्द" },
+    },
     notFound: { title: "सापडले नाही", home: "मुख्य" },
     errorPage: { title: "काहीतरी चुकले", retry: "पुन्हा प्रयत्न करा" },
+    khata: {
+      title: "खातेवही", personLabel: "नाव", personPlaceholder: "कोण? उदा. रमेश", amountLabel: "रक्कम ₹",
+      udhaar: "उधार (दिले)", jama: "जमा (मिळाले)", add: "नोंद जोडा",
+      empty: "अजून नोंदी नाहीत. बोला किंवा लिहा.",
+      passport: "क्रेडिट पासपोर्ट", score: "विश्वास स्कोअर", inflow: "मिळाले", outflow: "दिले",
+      pending: "बाकी", entries30d: "नोंदी (30 दिवस)", counterparties: "लोक",
+      ready: "लोन-रेडी", notReady: "रोज लिहीत रहा",
+    },
+    samuday: {
+      title: "समुदाय", guides: "जवळचे गाइड", becomeGuide: "गाइड व्हा",
+      guideOn: "तुम्ही गाइड आहात", guideOff: "गाइड बंद", yearsLabel: "अनुभव (वर्षे)",
+      askPlaceholder: "आपल्या गटाला विचारा…", send: "पाठवा", empty: "अजून संदेश नाहीत. बोला सुरू करा.", digest: "गाव सारांश ऐका",
+    },
+    loan: {
+      title: "कर्ज तयारी", qAge: "व्यवसाय 1 वर्षांपेक्षा जुना?", qIncome: "मासिक उत्पन्न ₹15,000 पेक्षा जास्त?",
+      qDocs: "आधार + बँक खाते तयार?", qHistory: "10+ खाते नोंदी लिहिल्या?",
+      yes: "होय", no: "नाही", yourScore: "तुमचा स्कोअर",
+      ready: "मुद्रा-रेडी! आत्ता अर्ज करा.", almost: "जवळजवळ झाले — राहिलेल्या गोष्टी पूर्ण करा.", early: "अजून लवकर आहे — आधी खाते इतिहास बनवा.",
+      viewSchemes: "कर्ज योजना पहा",
+    },
     schemes: {
       title: "सरकारी योजना", searchPlaceholder: "योजना शोधा…", all: "सर्व",
       central: "केंद्रीय", state: "महाराष्ट्र", womenOnly: "फक्त महिला",
@@ -298,6 +373,7 @@ export const translations: Record<Language, TranslationStrings> = {
       subtitleBuyer: (loc) => `${loc || "आपके"} पास खरीदें — स्थानीय विक्रेताओं से.`,
       quickTitle: "मुख्य विकल्प", schemes: "सरकारी योजनाएं", schemesDesc: "मुद्रा, PMEGP, लोन", market: "मंडी भाव", marketDesc: "नज़दीकी भाव",
       quick: { shopNearby: "आसपास खरीदें", shopNearbyDesc: "किराना, दर्जी, किसान", myOrders: "मेरे ऑर्डर", myOrdersDesc: "डिलीवरी ट्रैक करें" },
+      insurance: { title: "मानसून सुरक्षा", desc: "फसल बीमा खुला है — योजनाएं देखें" },
     },
     profile: {
       noProfileTitle: "प्रोफ़ाइल नहीं", noProfileDesc: "शुरू करने के लिए पंजीकरण करें.", goOnboarding: "पंजीकरण करें →",
@@ -309,11 +385,37 @@ export const translations: Record<Language, TranslationStrings> = {
         district: "जिला", state: "राज्य", pincode: "पिनकोड", deviceId: "डिवाइस ID",
         logout: "लॉग आउट", logoutConfirm: "इस फोन पर लॉग आउट करें? आपकी प्रोफ़ाइल सेव रहेगी — यह फोन नए सिरे से शुरू होगा।"
       },
+      upi: { label: "UPI ID", hint: "खरीदार यहीं भुगतान करेंगे", placeholder: "name@upi" },
+      guide: { title: "दूसरों को सिखाएं", desc: "अनुभवी विक्रेता नए लोगों की मदद करें", on: "गाइड चालू", off: "गाइड बंद" },
     },
     search: { title: "खोजें", tag: "जल्द आ रहा है", desc: "खरीदारों के लिए नज़दीकी विक्रेता और उत्पाद यहाँ दिखेंगे।" },
-    orders: { title: "ऑर्डर", tag: "जल्द आ रहा है", desc: "विक्रेता ऑर्डर और खरीदार कार्ट यहाँ होगा।" },
+    orders: {
+      title: "ऑर्डर", newTitle: "नया ऑर्डर", newPlaceholder: "क्या? उदा. 20 किलो गेहूं",
+      withLabel: "किसके साथ?", amountLabel: "रकम ₹", add: "ऑर्डर जोड़ें", empty: "अभी कोई ऑर्डर नहीं।", advance: "आगे बढ़ाएं",
+      statuses: { open: "खुला", confirmed: "पक्का", paid: "भुगतान", delivered: "पूरा", cancelled: "रद्द" },
+    },
     notFound: { title: "नहीं मिला", home: "होम" },
     errorPage: { title: "कुछ गड़बड़ हुई", retry: "फिर कोशिश करें" },
+    khata: {
+      title: "खाता बही", personLabel: "नाम", personPlaceholder: "कौन? उदा. रमेश", amountLabel: "रकम ₹",
+      udhaar: "उधार (दिया)", jama: "जमा (मिला)", add: "एंट्री जोड़ें",
+      empty: "अभी कोई एंट्री नहीं। बोलें या लिखें।",
+      passport: "क्रेडिट पासपोर्ट", score: "भरोसा स्कोर", inflow: "मिला", outflow: "दिया",
+      pending: "बाकी", entries30d: "एंट्री (30 दिन)", counterparties: "लोग",
+      ready: "लोन-रेडी", notReady: "रोज़ लिखते रहें",
+    },
+    samuday: {
+      title: "समुदाय", guides: "आसपास के गाइड", becomeGuide: "गाइड बनें",
+      guideOn: "आप गाइड हैं", guideOff: "गाइड बंद", yearsLabel: "अनुभव (साल)",
+      askPlaceholder: "अपने समूह से पूछें…", send: "भेजें", empty: "अभी कोई संदेश नहीं। बात शुरू करें।", digest: "गांव सारांश सुनें",
+    },
+    loan: {
+      title: "लोन तैयारी", qAge: "बिज़नेस 1 साल से पुराना?", qIncome: "मासिक आय ₹15,000 से ज्यादा?",
+      qDocs: "आधार + बैंक खाता तैयार?", qHistory: "10+ खाता एंट्री लिखीं?",
+      yes: "हाँ", no: "नहीं", yourScore: "आपका स्कोर",
+      ready: "मुद्रा-रेडी! अभी आवेदन करें।", almost: "बस थोड़ा बाकी — कमियां पूरी करें।", early: "अभी जल्दी है — पहले खाता इतिहास बनाएं।",
+      viewSchemes: "लोन योजनाएं देखें",
+    },
     schemes: {
       title: "सरकारी योजनाएं", searchPlaceholder: "योजना खोजें…", all: "सभी",
       central: "केंद्रीय", state: "महाराष्ट्र", womenOnly: "केवल महिला",

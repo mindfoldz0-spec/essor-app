@@ -43,9 +43,10 @@ export async function POST(req: Request) {
       `insert into public.user_profiles
         (device_id, role, preferred_language, full_name, location_name, district, state, pincode,
          latitude, longitude, business_stage, business_name, category, what_you_sell, business_idea,
-         primary_goal, is_woman_entrepreneur, phone, buyer_preferences, profile_picture)
+         primary_goal, is_woman_entrepreneur, phone, buyer_preferences,          profile_picture,
+         upi_vpa)
        values
-        ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+        ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
        on conflict (device_id) do update set
          role = excluded.role,
          preferred_language = excluded.preferred_language,
@@ -66,6 +67,9 @@ export async function POST(req: Request) {
          phone = excluded.phone,
          buyer_preferences = excluded.buyer_preferences,
          profile_picture = excluded.profile_picture,
+         -- keep existing UPI unless the caller sent a new value
+         -- (is_guide/guide_years live only in /api/guides, never here)
+         upi_vpa = coalesce(excluded.upi_vpa, public.user_profiles.upi_vpa),
          updated_at = now()
        returning *`,
       [
@@ -89,6 +93,7 @@ export async function POST(req: Request) {
         body.phone ?? null,
         body.buyer_preferences ?? null,
         body.profile_picture ?? null,
+        body.upi_vpa ?? null,
       ]
     );
     return NextResponse.json({ profile: res.rows[0] });

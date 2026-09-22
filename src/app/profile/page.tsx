@@ -1,17 +1,22 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useUserProfile, signOut } from "@/lib/userProfile";
+import { useUserProfile, signOut, refreshUserProfile } from "@/lib/userProfile";
 import { useLanguage } from "@/lib/languageContext";
 import Loader from "@/components/Loader";
-import { IconPin } from "@/components/icons";
+import { IconPin, IconCheck } from "@/components/icons";
 import { Language, sellLabel } from "@/lib/translations";
 
 export default function ProfilePage() {
   const profile = useUserProfile();
   const { language, setLanguage, t } = useLanguage();
   const router = useRouter();
+  const [upiOverride, setUpiOverride] = useState<string | null>(null);
+  const [upiSaved, setUpiSaved] = useState(false);
+  // Derived during render (no effect): manual edits win, else saved value.
+  const upi = upiOverride ?? profile?.upi_vpa ?? "";
 
   if (profile === undefined) return <div className="flex min-h-[50vh] items-center justify-center p-8"><Loader /></div>;
   if (profile === null) return <div className="p-6"><div className="rounded-[24px] border-[2px] border-[var(--black)] bg-white p-8 text-center shadow-[4px_4px_0_var(--black)]"><h1 className="text-[18px] font-black">{t.profile.noProfileTitle}</h1><p className="text-[13px] font-bold opacity-60">{t.profile.noProfileDesc}</p><Link href="/onboarding" className="mt-4 inline-flex h-11 items-center justify-center rounded-full bg-[var(--red)] px-6 text-white font-black border-[2px] border-[var(--black)]">{t.profile.goOnboarding}</Link></div></div>;
@@ -20,6 +25,28 @@ export default function ProfilePage() {
   const langs: { code: Language; label: string }[] = [{code:"english",label:"English"},{code:"marathi",label:"मराठी"},{code:"hindi",label:"हिंदी"}];
   const goalLabel = (g: string) =>
     g === "credit" ? t.onboarding.goalCredit : g === "customers" ? t.onboarding.goalCustomers : g === "skills" ? t.onboarding.goalSkills : g;
+
+  const saveUpi = async () => {
+    const id = (() => {
+      try {
+        return window.localStorage.getItem("essor_device_id");
+      } catch {
+        return null;
+      }
+    })();
+    if (!id || !profile) return;
+    const res = await fetch("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...profile, device_id: id, upi_vpa: upi.trim() || null }),
+    });
+    if (res.ok) {
+      setUpiOverride(null);
+      setUpiSaved(true);
+      refreshUserProfile();
+      window.setTimeout(() => setUpiSaved(false), 1800);
+    }
+  };
 
   return (
     <div className="w-full px-4 py-6 space-y-4">
@@ -48,6 +75,30 @@ export default function ProfilePage() {
             return <button key={l.code} type="button" onClick={()=>setLanguage(l.code)} className={`rounded-[14px] border-[2px] py-2.5 text-[13px] font-black ${active?"bg-[var(--black)] text-white border-[var(--black)]":"bg-white border-[var(--gray-200)] hover:border-[var(--black)]"}`}>{l.label}</button>
           })}
         </div>
+      </div>
+
+      <div className="rounded-[20px] border-[2px] border-[var(--black)] bg-white p-4 shadow-[4px_4px_0_var(--black)]">
+        <h2 className="text-[12px] font-black tracking-widest uppercase">{t.profile.upi.label}</h2>
+        <p className="mt-0.5 text-[11px] font-bold opacity-60">{t.profile.upi.hint}</p>
+        <div className="mt-2 flex gap-2">
+          <input
+            value={upi}
+            onChange={(e) => { setUpiOverride(e.target.value); setUpiSaved(false); }}
+            placeholder={t.profile.upi.placeholder}
+            maxLength={60}
+            className="h-11 min-w-0 flex-1 rounded-[12px] border-[2px] border-[var(--black)] bg-white px-3 text-[13px] font-bold outline-none placeholder:opacity-40"
+          />
+          <button
+            type="button"
+            onClick={saveUpi}
+            className={`flex h-11 shrink-0 items-center rounded-full border-[2px] border-[var(--black)] px-4 text-[12px] font-black ${upiSaved ? "bg-green-600 text-white" : "bg-[var(--black)] text-white"}`}
+          >
+            {upiSaved ? <IconCheck className="h-4 w-4" /> : t.profile.edit}
+          </button>
+        </div>
+        {profile.is_guide && (
+          <p className="mt-2 text-[11px] font-black text-green-700">{t.samuday.guideOn}</p>
+        )}
       </div>
 
       <div className="space-y-2">

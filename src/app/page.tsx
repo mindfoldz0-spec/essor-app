@@ -2,12 +2,15 @@
 import Link from "next/link";
 import { useLanguage } from "@/lib/languageContext";
 import { useUserProfile } from "@/lib/userProfile";
-import { IconPin, IconCart, IconBox } from "@/components/icons";
+import { IconPin, IconCart, IconBox, IconKhata, IconSamuday, IconShield } from "@/components/icons";
 
 export default function Home() {
   const profile = useUserProfile();
   const { t } = useLanguage();
   const isBuyer = profile?.role === "buyer";
+  const month = new Date().getMonth(); // 0-11
+  const showInsurance =
+    (profile?.category === "farmer" || profile?.category === "dairy") && month >= 5 && month <= 8;
 
   if (profile === undefined) return <div className="p-6 animate-pulse"><div className="h-32 rounded-[20px] bg-[var(--gray-100)]" /></div>;
   if (profile === null) return null; // guard will redirect
@@ -31,7 +34,7 @@ export default function Home() {
               <Link href="/search" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
                 <div className="flex items-center gap-2 text-[13px] font-black"><IconCart className="h-5 w-5 shrink-0" /> {t.home.quick.shopNearby}</div><div className="text-[11px] font-bold opacity-60">{t.home.quick.shopNearbyDesc}</div>
               </Link>
-              <Link href="/profile" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
+              <Link href="/orders" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
                 <div className="flex items-center gap-2 text-[13px] font-black"><IconBox className="h-5 w-5 shrink-0" /> {t.home.quick.myOrders}</div><div className="text-[11px] font-bold opacity-60">{t.home.quick.myOrdersDesc}</div>
               </Link>
             </>
@@ -46,7 +49,27 @@ export default function Home() {
             </>
           )}
         </div>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <Link href="/khata" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
+            <div className="flex items-center gap-2 text-[13px] font-black"><IconKhata className="h-5 w-5 shrink-0" /> {t.khata.title}</div>
+            <div className="text-[11px] font-bold opacity-60">{t.khata.passport}</div>
+          </Link>
+          <Link href="/samuday" className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--white)] p-4 hover:shadow-[4px_4px_0_var(--black)]">
+            <div className="flex items-center gap-2 text-[13px] font-black"><IconSamuday className="h-5 w-5 shrink-0" /> {t.samuday.title}</div>
+            <div className="text-[11px] font-bold opacity-60">{t.samuday.guides}</div>
+          </Link>
+        </div>
       </section>
+
+      {showInsurance && (
+        <Link href="/schemes?goal=insurance" className="flex items-center gap-3 rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--black)] p-4 text-white">
+          <IconShield className="h-8 w-8 shrink-0" />
+          <div>
+            <div className="text-[13px] font-black">{t.home.insurance.title}</div>
+            <div className="text-[11px] font-bold opacity-70">{t.home.insurance.desc}</div>
+          </div>
+        </Link>
+      )}
 
       <section className="rounded-[18px] border-[2px] border-[var(--black)] bg-[var(--red-soft)] p-4">
         <div className="text-[12px] font-black">Essor v0.0.1 • {isBuyer ? t.role.buyer : t.role.seller} • {t.langName}</div>
