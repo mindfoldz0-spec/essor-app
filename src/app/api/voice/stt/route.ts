@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Voice-to-text via Sarvam STT.
- * Body: { audioBase64, mime, language }
+ * Voice-to-text via Sarvam STT (saaras:v3 default).
+ * Body: { audioBase64, mime, language, mode? }
+ * mode: transcribe (normalized, best for numbers) | codemix (mixed
+ * speech + proper nouns, best for names) | verbatim | translit.
  * Uses multipart/form-data as Sarvam expects a file upload.
  */
 export async function POST(req: NextRequest) {
   try {
-    const { audioBase64, mime = "audio/webm", language = "hi-IN" } = await req.json();
+    const { audioBase64, mime = "audio/webm", language = "hi-IN", mode } = await req.json();
     if (!audioBase64) return NextResponse.json({ error: "audioBase64 required" }, { status: 400 });
 
     const apiKey = process.env.SARVAM_API_KEY;
@@ -19,7 +21,13 @@ export async function POST(req: NextRequest) {
 
     const form = new FormData();
     form.append("file", blob, ext);
-    form.append("model", process.env.SARVAM_STT_MODEL || "saarika:v2.5");
+    const model = process.env.SARVAM_STT_MODEL || "saaras:v3";
+    form.append("model", model);
+    // `mode` is only supported by saaras models — omit for legacy saarika.
+    if (model.startsWith("saaras")) {
+      const allowed = ["transcribe", "verbatim", "translit", "codemix"];
+      form.append("mode", allowed.includes(mode) ? mode : "transcribe");
+    }
     form.append("language_code", language);
     form.append("with_timestamps", "false");
 
@@ -31,6 +39,7 @@ export async function POST(req: NextRequest) {
 
     if (!sarvamRes.ok) {
       const err = await sarvamRes.text();
+      console.error("[stt] Sarvam failed:", sarvamRes.status, err.slice(0, 500));
       return NextResponse.json(
         { error: "Sarvam STT failed", detail: err.slice(0, 500) },
         { status: 502 }
@@ -39,6 +48,7 @@ export async function POST(req: NextRequest) {
 
     const json = await sarvamRes.json();
     const transcript: string = json?.transcript ?? json?.text ?? "";
+    if (!transcript) console.warn("[stt] empty transcript, raw keys:", Object.keys(json ?? {}));
     return NextResponse.json({ transcript, raw: json });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "stt error";

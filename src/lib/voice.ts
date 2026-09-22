@@ -44,29 +44,9 @@ async function idbSet(key: string, blob: Blob) {
   }
 }
 
-function browserSpeak(text: string, lang: VoiceCode) {
-  try {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang;
-    u.rate = 0.95;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(u);
-  } catch {
-    /* ignore */
-  }
-}
-
 // Browsers block <audio> playback before the first tap, but device speech
-// synthesis usually still talks — so pre-tap auto-plays use it directly
+// synthesis usually still talks — so a blocked file falls back to it
 // (zero network, best chance of being heard on first landing).
-let hasInteracted = false;
-if (typeof window !== "undefined") {
-  const mark = () => {
-    hasInteracted = true;
-  };
-  window.addEventListener("pointerdown", mark, { once: true });
-  window.addEventListener("keydown", mark, { once: true });
-}
 
 /** Device TTS, awaitable: resolves when the utterance ends (or safety timeout). */
 function browserSpeakAsync(text: string, lang: VoiceCode, myGen: number): Promise<void> {
@@ -89,8 +69,19 @@ function browserSpeakAsync(text: string, lang: VoiceCode, myGen: number): Promis
       // Safety: never hold the audio lock longer than the estimate.
       const estimate = Math.min(15000, Math.max(3000, text.length * 120));
       setTimeout(finish, estimate);
-      synth.cancel();
+      try {
+        synth.cancel();
+      } catch {
+        /* ignore */
+      }
       synth.speak(u);
+      try {
+        // Unstick Chrome's engine: a paused queue bursts out later as
+        // overlapping "ghost" voices if never resumed.
+        synth.resume();
+      } catch {
+        /* ignore */
+      }
       // A newer clip took over while we queued — drop this one at once.
       if (myGen !== generation) {
         try {
@@ -129,6 +120,9 @@ export function stopSpeaking() {
     currentAudio?.pause();
     currentAudio = null;
     window.speechSynthesis?.cancel();
+    // Unstick Chrome: without resume(), a cancelled queue can burst out
+    // later as ghost audio overlapping the next clip.
+    window.speechSynthesis?.resume();
   } catch {
     /* ignore */
   }
@@ -171,14 +165,14 @@ async function startAudio(url: string, myGen: number): Promise<void> {
 }
 
 /** Play a pre-baked clip from public/voices to completion.
- * Throws SpeechCancelled if a newer clip took over mid-load. */
+ * No HEAD check — just play; a 404 rejects play() and counts as missing.
+ * Throws SpeechCancelled if a newer clip took over, AutoplayBlocked if the
+ * browser refused playback (pre-tap landing). */
 async function playLocalFile(voiceKey: string, lang: VoiceCode, myGen: number): Promise<boolean> {
   if (!VOICE_KEYS.includes(voiceKey as (typeof VOICE_KEYS)[number])) return false;
   const url = `/voices/${lang}/${voiceKey}.wav`;
   try {
-    const head = await fetch(url, { method: "HEAD" });
     if (myGen !== generation) throw new SpeechCancelled();
-    if (!head.ok) return false;
     await startAudio(url, myGen);
     return true;
   } catch (e) {
@@ -206,12 +200,15 @@ export function preloadVoices(lang: VoiceCode) {
 
 /** Fetch (cached) Sarvam TTS audio and play it to completion. Falls back to browser TTS.
  * Order: pre-baked file -> IndexedDB -> /api/voice/tts -> speechSynthesis.
+ * The file is ALWAYS tried first — even pre-tap (sometimes allowed) — and a
+ * blocked file skips the network chain straight to device speech.
  *
  * Spam-proof: if a clip is already playing, the new request is IGNORED so the
  * current one always completes — no restarts, no overlapping audio, no matter
- * how fast the user taps. Pass { interrupt: true } only for step changes,
- * where the new prompt must cut off the old one. Resolves when the clip ends
- * (or is stopped), so callers can track playing state accurately. */
+ * how fast the user taps. Pass { interrupt: true } only for step changes and
+ * explicit taps, where the new prompt must cut off the old one (with a short
+ * settle so the killed output can't tail over the new clip). Resolves when
+ * the clip ends (or is stopped), so callers can track playing state. */
 export async function speakText(
   text: string,
   lang: VoiceCode,
@@ -228,25 +225,39 @@ export async function speakText(
     if (myGen === generation) isPlaying = false;
   };
   try {
-    // No tap yet (first landing): <audio> would be blocked, so talk with
-    // device speech instead of burning a Sarvam call that can't be heard.
-    if (!hasInteracted) {
+    if (opts?.interrupt) {
+      // Let the killed output fully die (esp. speech-synthesis tails)
+      // before starting the new clip — otherwise they overlap briefly.
+      await new Promise((r) => setTimeout(r, 120));
+      alive();
+    }
+    // 0. Pre-baked clip — instant, no network API, no delay.
+    // cacheKey format is "<voiceKey>:<lang>", e.g. "page_role:hi-IN".
+    let blocked = false;
+    if (opts?.cacheKey) {
+      const sep = opts.cacheKey.lastIndexOf(":");
+      if (sep > 0) {
+        const vk = opts.cacheKey.slice(0, sep);
+        const lg = opts.cacheKey.slice(sep + 1) as VoiceCode;
+        if (lg === lang) {
+          try {
+            if (await playLocalFile(vk, lg, myGen)) return;
+          } catch (e) {
+            if (e instanceof SpeechCancelled) throw e;
+            // Blocked (pre-tap): a Sarvam fetch would be blocked too —
+            // skip the network and talk with device speech instead.
+            if (e instanceof AutoplayBlocked) blocked = true;
+          }
+        }
+      }
+    }
+    if (blocked) {
       try {
         await browserSpeakAsync(text, lang, myGen);
       } finally {
         release();
       }
       return;
-    }
-    // 0. Pre-baked clip — instant, no network API, no delay.
-    // cacheKey format is "<voiceKey>:<lang>", e.g. "page_role:hi-IN".
-    if (opts?.cacheKey) {
-      const sep = opts.cacheKey.lastIndexOf(":");
-      if (sep > 0) {
-        const vk = opts.cacheKey.slice(0, sep);
-        const lg = opts.cacheKey.slice(sep + 1) as VoiceCode;
-        if (lg === lang && (await playLocalFile(vk, lg, myGen))) return;
-      }
     }
     alive();
     const key = `tts:${lang}:${opts?.cacheKey ?? text}:${versionOf(text)}`;
@@ -290,14 +301,13 @@ export async function speakText(
       await browserSpeakAsync(text, lang, myGen);
     }
   } catch (e) {
-    // Cancelled / autoplay-blocked: stay silent. Anything else already fell
-    // back to device TTS above.
-    if (!(e instanceof SpeechCancelled) && !(e instanceof AutoplayBlocked)) {
-      try {
-        browserSpeak(text, lang);
-      } catch {
-        /* ignore */
-      }
+    // Cancelled: stay silent. Anything else already fell back to device
+    // TTS above — one last awaited attempt so outputs never overlap.
+    if (e instanceof SpeechCancelled) return;
+    try {
+      await browserSpeakAsync(text, lang, myGen);
+    } catch {
+      /* ignore */
     }
   } finally {
     if (myGen === generation) isPlaying = false;

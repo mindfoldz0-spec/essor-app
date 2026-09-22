@@ -61,13 +61,14 @@ export interface TranslationStrings {
     details: {
       whatSell: string; preferences: string; notSet: string; yesUnlocked: string; no: string;
       district: string; state: string; pincode: string; deviceId: string;
+      logout: string; logoutConfirm: string;
     };
   };
   search: { title: string; tag: string; desc: string };
   orders: { title: string; tag: string; desc: string };
   notFound: { title: string; home: string };
   errorPage: { title: string; retry: string };
-  voice: { toggleGuide: string; muteGuide: string; unmuteGuide: string; hear: string; speak: string; stop: string };
+  voice: { toggleGuide: string; muteGuide: string; unmuteGuide: string; hear: string; speak: string; stop: string; sttFailed: string; micDenied: string };
 }
 
 const catEn: Record<string, string> = {
@@ -170,13 +171,14 @@ export const translations: Record<Language, TranslationStrings> = {
         whatSell: "What you sell", preferences: "Preferences", notSet: "Not set",
         yesUnlocked: "Yes — unlocked", no: "No",
         district: "District", state: "State", pincode: "Pincode", deviceId: "Device ID",
+        logout: "Log Out", logoutConfirm: "Log out on this phone? Your profile stays saved — this phone will start fresh.",
       },
     },
     search: { title: "Search", tag: "Coming Soon", desc: "Nearby sellers and products will appear here for buyers." },
     orders: { title: "Orders", tag: "Coming Soon", desc: "Seller orders and buyer cart will live here." },
     notFound: { title: "Not Found", home: "Home" },
     errorPage: { title: "Something went wrong", retry: "Try Again" },
-    voice: { toggleGuide: "Voice guidance", muteGuide: "Mute voice guidance", unmuteGuide: "Unmute voice guidance", hear: "Hear", speak: "Speak", stop: "Stop listening" },
+    voice: { toggleGuide: "Voice guidance", muteGuide: "Mute voice guidance", unmuteGuide: "Unmute voice guidance", hear: "Hear", speak: "Speak", stop: "Stop listening", sttFailed: "Couldn't catch that. Please speak again.", micDenied: "Microphone blocked. Allow mic access to speak." },
   },
   marathi: {
     langName: "मराठी", continue: "पुढे जा", listen: "ऐका", listening: "सुरू आहे...", loading: "लोड होत आहे...",
@@ -226,13 +228,14 @@ export const translations: Record<Language, TranslationStrings> = {
         whatSell: "काय विकता", preferences: "आवडी", notSet: "सेट नाही",
         yesUnlocked: "होय — अनलॉक", no: "नाही",
         district: "जिल्हा", state: "राज्य", pincode: "पिनकोड", deviceId: "डिव्हाइस ID",
+        logout: "लॉग आउट", logoutConfirm: "या फोनवर लॉग आउट करायचे? तुमची प्रोफाइल जतन राहील — हा फोन नव्याने सुरू होईल."
       },
     },
     search: { title: "शोधा", tag: "लवकरच येत आहे", desc: "खरेदीदारांसाठी जवळचे विक्रेते आणि उत्पादने येथे दिसतील." },
     orders: { title: "ऑर्डर", tag: "लवकरच येत आहे", desc: "विक्रेता ऑर्डर आणि खरेदीदार कार्ट येथे असेल." },
     notFound: { title: "सापडले नाही", home: "मुख्य" },
     errorPage: { title: "काहीतरी चुकले", retry: "पुन्हा प्रयत्न करा" },
-    voice: { toggleGuide: "आवाज मार्गदर्शन", muteGuide: "आवाज बंद करा", unmuteGuide: "आवाज चालू करा", hear: "ऐका", speak: "बोला", stop: "ऐकणे थांबवा" },
+    voice: { toggleGuide: "आवाज मार्गदर्शन", muteGuide: "आवाज बंद करा", unmuteGuide: "आवाज चालू करा", hear: "ऐका", speak: "बोला", stop: "ऐकणे थांबवा", sttFailed: "ऐकू आले नाही. कृपया पुन्हा बोला.", micDenied: "माइक बंद आहे. बोलण्यासाठी माइकला परवानगी द्या." },
   },
   hindi: {
     langName: "हिंदी", continue: "आगे बढ़ें", listen: "सुनें", listening: "चल रहा है...", loading: "लोड हो रहा है...",
@@ -282,12 +285,13 @@ export const translations: Record<Language, TranslationStrings> = {
         whatSell: "क्या बेचते हैं", preferences: "पसंद", notSet: "सेट नहीं",
         yesUnlocked: "हाँ — अनलॉक", no: "नहीं",
         district: "जिला", state: "राज्य", pincode: "पिनकोड", deviceId: "डिवाइस ID",
+        logout: "लॉग आउट", logoutConfirm: "इस फोन पर लॉग आउट करें? आपकी प्रोफ़ाइल सेव रहेगी — यह फोन नए सिरे से शुरू होगा।"
       },
     },
     search: { title: "खोजें", tag: "जल्द आ रहा है", desc: "खरीदारों के लिए नज़दीकी विक्रेता और उत्पाद यहाँ दिखेंगे।" },
     orders: { title: "ऑर्डर", tag: "जल्द आ रहा है", desc: "विक्रेता ऑर्डर और खरीदार कार्ट यहाँ होगा।" },
     notFound: { title: "नहीं मिला", home: "होम" },
     errorPage: { title: "कुछ गड़बड़ हुई", retry: "फिर कोशिश करें" },
-    voice: { toggleGuide: "आवाज़ मार्गदर्शन", muteGuide: "आवाज़ बंद करें", unmuteGuide: "आवाज़ चालू करें", hear: "सुनें", speak: "बोलें", stop: "सुनना बंद करें" },
+    voice: { toggleGuide: "आवाज़ मार्गदर्शन", muteGuide: "आवाज़ बंद करें", unmuteGuide: "आवाज़ चालू करें", hear: "सुनें", speak: "बोलें", stop: "सुनना बंद करें", sttFailed: "सुन नहीं पाए। कृपया फिर से बोलें।", micDenied: "माइक बंद है। बोलने के लिए माइक की अनुमति दें।" },
   },
 };

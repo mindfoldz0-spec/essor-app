@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useUserProfile } from "@/lib/userProfile";
+import { useRouter } from "next/navigation";
+import { useUserProfile, signOut } from "@/lib/userProfile";
 import { useLanguage } from "@/lib/languageContext";
 import Loader from "@/components/Loader";
 import { IconPin } from "@/components/icons";
@@ -10,6 +11,7 @@ import { Language, sellLabel } from "@/lib/translations";
 export default function ProfilePage() {
   const profile = useUserProfile();
   const { language, setLanguage, t } = useLanguage();
+  const router = useRouter();
 
   if (profile === undefined) return <div className="flex min-h-[50vh] items-center justify-center p-8"><Loader /></div>;
   if (profile === null) return <div className="p-6"><div className="rounded-[24px] border-[2px] border-[var(--black)] bg-white p-8 text-center shadow-[4px_4px_0_var(--black)]"><h1 className="text-[18px] font-black">{t.profile.noProfileTitle}</h1><p className="text-[13px] font-bold opacity-60">{t.profile.noProfileDesc}</p><Link href="/onboarding" className="mt-4 inline-flex h-11 items-center justify-center rounded-full bg-[var(--red)] px-6 text-white font-black border-[2px] border-[var(--black)]">{t.profile.goOnboarding}</Link></div></div>;
@@ -76,6 +78,19 @@ export default function ProfilePage() {
         <div className="text-[11px] font-black opacity-60">{t.profile.details.deviceId}</div>
         <div className="text-[10px] font-mono font-bold break-all">{profile.device_id}</div>
       </div>
+
+      <button
+        type="button"
+        onClick={() => {
+          if (window.confirm(t.profile.details.logoutConfirm)) {
+            signOut();
+            router.push("/onboarding");
+          }
+        }}
+        className="flex h-12 w-full items-center justify-center rounded-full border-[2px] border-[var(--red)] bg-white text-[14px] font-black text-[var(--red)] active:scale-[0.98]"
+      >
+        {t.profile.details.logout}
+      </button>
     </div>
   );
 }

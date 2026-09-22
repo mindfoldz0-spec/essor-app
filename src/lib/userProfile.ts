@@ -135,6 +135,7 @@ export function clearOnboardingDraft(): void { if (typeof window !== "undefined"
 type Listener = () => void;
 let cache: UserProfile | null | undefined = undefined;
 let inflight: Promise<void> | null = null;
+let generation = 0;
 const listeners = new Set<Listener>();
 
 function notify(): void {
@@ -148,16 +149,39 @@ function setSharedProfile(profile: UserProfile): void {
 
 export function refreshUserProfile(): void {
   if (typeof window === "undefined" || inflight) return;
+  const myGen = generation;
   inflight = getUserProfile()
     .catch((e: unknown) => {
       console.error("getUserProfile", e);
       return null;
     })
     .then((profile) => {
+      // A logout invalidated this fetch — never resurrect the old profile.
+      if (myGen !== generation) return;
       cache = profile;
       inflight = null;
       notify();
     });
+}
+
+/** Log out on this device: forget the device id + draft + role, keep the
+ * app language, empty the shared store so the guard routes to onboarding.
+ * The server row stays (keyed by the old device id) — this phone just
+ * starts fresh with a new anonymous id on next launch. */
+export function signOut(): void {
+  if (typeof window === "undefined") return;
+  generation++;
+  inflight = null;
+  try {
+    window.localStorage.removeItem(DEVICE_KEY);
+    window.localStorage.removeItem(DRAFT_KEY);
+    window.localStorage.removeItem("essor_role");
+  } catch {
+    /* ignore */
+  }
+  cache = null;
+  notify();
+  window.dispatchEvent(new Event("essor:profile-updated"));
 }
 
 function subscribe(listener: Listener): () => void {
