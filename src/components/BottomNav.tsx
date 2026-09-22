@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import styled from "styled-components";
 import { useLanguage } from "@/lib/languageContext";
 import { useStoredRole, useUserProfile } from "@/lib/userProfile";
+import { IconHome, IconSearch, IconProfile, IconBox } from "@/components/icons";
 
 export default function BottomNav() {
   const pathname = usePathname();
@@ -18,11 +19,11 @@ export default function BottomNav() {
   const isBuyer = (profile?.role ?? storedRole ?? "seller") === "buyer";
 
   const items = [
-    { href: "/", label: t.nav.home, icon: <svg viewBox="0 0 104 100" fill="none"><path d="M100.5 40.75V96.5H66V68.5V65H62.5H43H39.5V68.5V96.5H3.5V40.75L52 4.375L100.5 40.75Z" stroke="currentColor" strokeWidth={7} strokeLinejoin="round"/></svg> },
+    { href: "/", label: t.nav.home, icon: <IconHome /> },
     isBuyer
-      ? { href: "/search", label: t.nav.search, icon: <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth={1.8}/><path d="M15.5 15.5L19 19" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round"/></svg> }
-      : { href: "/orders", label: t.nav.orders, icon: <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth={1.8}/><path d="M3 7l3-3h12l3 3" stroke="currentColor" strokeWidth={1.8}/></svg> },
-    { href: "/profile", label: t.nav.profile, icon: <svg viewBox="0 0 104 100" fill="none"><rect x="21.5" y="3.5" width={60} height={60} rx={30} stroke="currentColor" strokeWidth={7}/></svg> },
+      ? { href: "/search", label: t.nav.search, icon: <IconSearch /> }
+      : { href: "/orders", label: t.nav.orders, icon: <IconBox /> },
+    { href: "/profile", label: t.nav.profile, icon: <IconProfile /> },
   ];
 
   return (
