@@ -13,16 +13,30 @@ interface Scheme {
   name_hi: string;
   name_mr: string;
   department: string;
+  department_hi: string;
+  department_mr: string;
   level: string;
   categories: string[];
   target_group: string;
+  target_group_hi: string;
+  target_group_mr: string;
   is_women_focused: boolean;
   primary_goal: string;
   max_benefit: string;
+  max_benefit_hi: string;
+  max_benefit_mr: string;
   summary: string;
+  summary_hi: string;
+  summary_mr: string;
   eligibility: string[];
+  eligibility_hi: string[];
+  eligibility_mr: string[];
   documents: string[];
+  documents_hi: string[];
+  documents_mr: string[];
   apply_steps: string[];
+  apply_steps_hi: string[];
+  apply_steps_mr: string[];
   official_portal: string;
   youtube_tutorials: { title: string; url: string; language: string }[];
   official_articles: { title: string; url: string }[];
@@ -32,6 +46,19 @@ function displayName(s: Scheme, lang: Language): string {
   if (lang === "hindi") return s.name_hi || s.name;
   if (lang === "marathi") return s.name_mr || s.name;
   return s.name;
+}
+
+/** Localized text / list with English fallback (translation backfill in progress). */
+function pick(en: string, hi: string, mr: string, lang: Language): string {
+  if (lang === "hindi") return hi || en;
+  if (lang === "marathi") return mr || en;
+  return en;
+}
+
+function pickArr(en: string[], hi: string[], mr: string[], lang: Language): string[] {
+  if (lang === "hindi") return hi?.length ? hi : en;
+  if (lang === "marathi") return mr?.length ? mr : en;
+  return en;
 }
 
 export default function SchemeDetailPage() {
@@ -84,11 +111,11 @@ export default function SchemeDetailPage() {
           {scheme.level} • {goalLabel}
         </span>
         <h1 className="mt-3 text-[20px] font-black leading-tight">{displayName(scheme, language)}</h1>
-        <p className="mt-1 text-[12px] font-bold opacity-60">{scheme.department}</p>
-        {scheme.summary && <p className="mt-3 text-[13px] font-bold leading-relaxed">{scheme.summary}</p>}
+        <p className="mt-1 text-[12px] font-bold opacity-60">{pick(scheme.department, scheme.department_hi, scheme.department_mr, language)}</p>
+        {scheme.summary && <p className="mt-3 text-[13px] font-bold leading-relaxed">{pick(scheme.summary, scheme.summary_hi, scheme.summary_mr, language)}</p>}
         {scheme.max_benefit && (
           <div className="mt-3 rounded-[14px] bg-[var(--gray-100)] p-3 text-[13px] font-black">
-            {t.schemes.benefit}: {scheme.max_benefit}
+            {t.schemes.benefit}: {pick(scheme.max_benefit, scheme.max_benefit_hi, scheme.max_benefit_mr, language)}
           </div>
         )}
         {scheme.official_portal && (
@@ -98,14 +125,14 @@ export default function SchemeDetailPage() {
         )}
       </div>
 
-      {scheme.eligibility.length > 0 && (
-        <Section title={t.schemes.eligibility} items={scheme.eligibility} ordered={false} />
+      {pickArr(scheme.eligibility, scheme.eligibility_hi, scheme.eligibility_mr, language).length > 0 && (
+        <Section title={t.schemes.eligibility} items={pickArr(scheme.eligibility, scheme.eligibility_hi, scheme.eligibility_mr, language)} ordered={false} />
       )}
-      {scheme.documents.length > 0 && (
-        <Section title={t.schemes.documents} items={scheme.documents} ordered={false} />
+      {pickArr(scheme.documents, scheme.documents_hi, scheme.documents_mr, language).length > 0 && (
+        <Section title={t.schemes.documents} items={pickArr(scheme.documents, scheme.documents_hi, scheme.documents_mr, language)} ordered={false} />
       )}
-      {scheme.apply_steps.length > 0 && (
-        <Section title={t.schemes.steps} items={scheme.apply_steps} ordered />
+      {pickArr(scheme.apply_steps, scheme.apply_steps_hi, scheme.apply_steps_mr, language).length > 0 && (
+        <Section title={t.schemes.steps} items={pickArr(scheme.apply_steps, scheme.apply_steps_hi, scheme.apply_steps_mr, language)} ordered />
       )}
 
       {scheme.youtube_tutorials.length > 0 && (

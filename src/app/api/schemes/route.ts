@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 
-const LIST_COLS = `id, name, name_hi, name_mr, department, level, categories,
-  target_group, is_women_focused, primary_goal, max_benefit, summary, official_portal`;
+const LIST_COLS = `id, name, name_hi, name_mr, department, department_hi, department_mr,
+  level, categories, target_group, target_group_hi, target_group_mr,
+  is_women_focused, primary_goal, max_benefit, max_benefit_hi, max_benefit_mr,
+  summary, summary_hi, summary_mr, official_portal`;
 
 // GET /api/schemes?category=farmer&level=Maharashtra&goal=credit&women=true&q=loan&limit=50
 export async function GET(req: Request) {

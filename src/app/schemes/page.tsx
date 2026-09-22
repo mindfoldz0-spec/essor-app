@@ -13,18 +13,31 @@ interface SchemeRow {
   name_hi: string;
   name_mr: string;
   department: string;
+  department_hi: string;
+  department_mr: string;
   level: string;
   categories: string[];
   is_women_focused: boolean;
   primary_goal: string;
   max_benefit: string;
+  max_benefit_hi: string;
+  max_benefit_mr: string;
   summary: string;
+  summary_hi: string;
+  summary_mr: string;
 }
 
 function displayName(s: SchemeRow, lang: Language): string {
   if (lang === "hindi") return s.name_hi || s.name;
   if (lang === "marathi") return s.name_mr || s.name;
   return s.name;
+}
+
+/** Localized text with English fallback (translation backfill in progress). */
+function pick(en: string, hi: string, mr: string, lang: Language): string {
+  if (lang === "hindi") return hi || en;
+  if (lang === "marathi") return mr || en;
+  return en;
 }
 
 const GOALS = ["credit", "skills", "subsidy", "insurance"] as const;
@@ -172,7 +185,7 @@ export default function SchemesPage() {
             </div>
             {s.max_benefit && (
               <div className="mt-2 rounded-[10px] bg-[var(--gray-100)] p-2 text-[12px] font-black">
-                {t.schemes.benefit}: {s.max_benefit}
+                {t.schemes.benefit}: {pick(s.max_benefit, s.max_benefit_hi, s.max_benefit_mr, language)}
               </div>
             )}
           </Link>

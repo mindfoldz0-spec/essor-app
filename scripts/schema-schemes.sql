@@ -37,3 +37,20 @@ create index if not exists idx_schemes_name_trgm on public.schemes using gin (na
 create or replace function public.handle_updated_at() returns trigger as $$ begin new.updated_at = now(); return new; end; $$ language plpgsql;
 drop trigger if exists trg_schemes_updated on public.schemes;
 create trigger trg_schemes_updated before update on public.schemes for each row execute function public.handle_updated_at();
+
+-- ── Trilingual content (Sarvam Mayura translations of the English source) ──
+-- Names already had name_hi/name_mr; everything else gets _hi/_mr columns.
+alter table public.schemes add column if not exists summary_hi text not null default '';
+alter table public.schemes add column if not exists summary_mr text not null default '';
+alter table public.schemes add column if not exists eligibility_hi text[] not null default '{}';
+alter table public.schemes add column if not exists eligibility_mr text[] not null default '{}';
+alter table public.schemes add column if not exists documents_hi text[] not null default '{}';
+alter table public.schemes add column if not exists documents_mr text[] not null default '{}';
+alter table public.schemes add column if not exists apply_steps_hi text[] not null default '{}';
+alter table public.schemes add column if not exists apply_steps_mr text[] not null default '{}';
+alter table public.schemes add column if not exists max_benefit_hi text not null default '';
+alter table public.schemes add column if not exists max_benefit_mr text not null default '';
+alter table public.schemes add column if not exists department_hi text not null default '';
+alter table public.schemes add column if not exists department_mr text not null default '';
+alter table public.schemes add column if not exists target_group_hi text not null default '';
+alter table public.schemes add column if not exists target_group_mr text not null default '';

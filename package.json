@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "voice:download": "node scripts/download-voices.mjs",
-    "schemes:seed": "node scripts/seed-schemes.mjs"
+    "schemes:seed": "node scripts/seed-schemes.mjs",
+    "schemes:translate": "node scripts/translate-schemes.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.47.0",
