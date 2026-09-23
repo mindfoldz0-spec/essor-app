@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "voice:download": "node scripts/download-voices.mjs",
+    "voice:labels": "node scripts/export-labeled-voices.mjs",
     "schemes:seed": "node scripts/seed-schemes.mjs",
     "schemes:translate": "node scripts/translate-schemes.mjs"
   },
